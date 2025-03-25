@@ -1,0 +1,46 @@
+	/*
+ *   ALL RIGHTS RESERVED.
+ *   _________________________________________________________________________________
+ *   NOTICE: All information contained  herein is, and remains the property  of  Varga
+ *   Consulting and  its suppliers, if  any. The intellectual and  technical  concepts
+ *   contained herein are proprietary to Varga Consulting and its suppliers and may be
+ *   covered  by  Canadian and  Foreign Patents, patents in process, and are protected
+ *   by  trade secret or copyright law. Dissemination of this information or reproduc-
+ *   tion  of  this  material is strictly forbidden unless prior written permission is
+ *   obtained from Varga Consulting.
+ *
+ *   Copyright © <2017-2025> Varga Consulting, Toronto, On     info@vargaconsulting.ca
+ *   _________________________________________________________________________________
+ */
+#include <cstdint>
+
+#ifndef IEX_PROTOCOL_H
+#define IEX_PROTOCOL_H
+	namespace iex {
+		static constexpr uint16_t IEX_DEEPS_v105 = 0x8004; //!< as defined in deeps spec
+	}
+
+	namespace iex { namespace protocol {
+		struct header{
+			uint8_t type;
+			uint8_t flag;
+			int64_t time;
+			int64_t symbol;
+		}__attribute__((packed));
+		static_assert( sizeof(header) == 18, "not aligned to byte!!!");
+	}}
+	
+	#include "v105/deeps.h"
+	
+	namespace iex { namespace protocol {
+		struct block {
+			/** The Message Length is an unsigned binary count representing the number of bytes in a message following the Message
+			 * Length field. The Message Length field value does not include the two bytes occupied by the Message Length field. The
+			 * total size of the Message Block is the value of the Message Length field plus two.
+			 */
+			uint16_t length;
+			header      hdr;
+		}__attribute__((packed));
+		static_assert( sizeof(block) == 20, "not aligned to byte!!!");
+	}}
+#endif
