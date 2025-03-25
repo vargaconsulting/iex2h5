@@ -18,6 +18,7 @@
 #define IEX_PROTOCOL_H
 	namespace iex {
 		static constexpr uint16_t IEX_DEEPS_v105 = 0x8004; //!< as defined in deeps spec
+		static constexpr uint16_t IEX_TOPS_v156  = 0x8002; //!< defined in tops spec
 	}
 
 	namespace iex { namespace protocol {
@@ -31,6 +32,7 @@
 	}}
 	
 	#include "v105/deeps.h"
+	#include "v156/tops.h"
 	
 	namespace iex { namespace protocol {
 		struct block {
