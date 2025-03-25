@@ -42,6 +42,7 @@ namespace iex {
 		std::vector<std::string> symbols;
 		private:
 			void tops_v156(  const iex::tops::v156::message  * msg );
+			void tops_v163(  const iex::tops::v163::message  * msg );
 			void deeps_v105( const iex::deeps::v105::message * msg );
 			long count;
 			bool is_market_opened,is_market_closed,is_first_beat;
@@ -51,6 +52,7 @@ namespace iex {
 }
 #include "itransport_v125.hpp"
 #include "itops_v156.hpp"
+#include "itops_v163.hpp"
 #include "ideeps_v105.hpp"
 #endif
 
