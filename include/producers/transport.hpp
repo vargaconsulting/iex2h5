@@ -41,11 +41,13 @@ namespace iex {
 
 		std::vector<std::string> symbols;
 		private:
+			void deeps_v105( const iex::deeps::v105::message * msg );
 			long count;
 			bool is_market_opened,is_market_closed,is_first_beat;
 			time_point today;
 			time_point last_time;
 	};
 }
+#include "ideeps_v105.hpp"
 #endif
 
