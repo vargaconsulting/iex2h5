@@ -44,4 +44,15 @@ install:
 
 clean:
 	@$(RM) *.o *.prof  $(app)
+
+tops_files :=$(sort $(wildcard ../data/*))
+
+# iex-download --tops --from 2017-01-01 --to 2017-01-08
+test-tops: $(app) $(HOME)/iex.h5
+	$(foreach dp, $(tops_files),  unpigz -c $(dp) | ./$(app) -g 3 --time-interval 20 --command rts --glog-minloglevel 3 -o $(HOME)/iex.h5; )
+	#./$(app) -o $(HOME)/iex.h5 --command index
+
+$(HOME)/iex.h5: $(app)
+	unpigz -c ../data/TOPS-2017-01-06.pcap.gz | ./$(app) -g 9   --command assets -o $(HOME)/iex.h5
+
 .PHONY: 
