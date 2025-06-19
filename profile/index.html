@@ -1,0 +1,795 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../file-format/">
+      
+      
+        <link rel="next" href="../download-demo/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Profileing - IEX2H5</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.0.1/dist/bundle/asciinema-player.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#profiling-and-base-performance-optimization-in-iex2h5" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      <!-- Custom header inserted into the <body> before content -->
+<div style="background: #f8f8f8; padding: 1em; font-size: 1.5em;">
+  <div style="text-align: left; margin-left: 1%;">
+    IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5
+  </div>
+</div>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="IEX2H5" class="md-nav__button md-logo" aria-label="IEX2H5" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    IEX2H5
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../consumers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Consumers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Generics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backtesting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../file-format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    File Format
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Profileing
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Profileing
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools Used
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-hotspots-identified" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Hotspots Identified
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Hotspots Identified">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stdchronooperator" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. std::chrono::operator&lt;=&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-stdchronodurationcount" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. std::chrono::duration::count()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-iextransport_ttransport_handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. iex::transport_t::transport_handler(...)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-stdunordered_map-internals" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. std::unordered_map Internals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimization Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-time-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Replace Time Comparisons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-raw-timestamps-in-hot-loops" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Raw Timestamps in Hot Loops
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flatten-container-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flatten Container Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lessons-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lessons Learned
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../download-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Download Demo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools Used
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-hotspots-identified" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Hotspots Identified
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Hotspots Identified">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stdchronooperator" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. std::chrono::operator&lt;=&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-stdchronodurationcount" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. std::chrono::duration::count()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-iextransport_ttransport_handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. iex::transport_t::transport_handler(...)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-stdunordered_map-internals" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. std::unordered_map Internals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimization Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-time-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Replace Time Comparisons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-raw-timestamps-in-hot-loops" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Raw Timestamps in Hot Loops
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flatten-container-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flatten Container Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lessons-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lessons Learned
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="profiling-and-base-performance-optimization-in-iex2h5">Profiling and Base Performance Optimization in <code>iex2h5</code><a class="headerlink" href="#profiling-and-base-performance-optimization-in-iex2h5" title="Permanent link">#</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
+<p>This article documents the profiling journey of the <code>iex2h5</code> application, focusing on identifying and optimizing base performance bottlenecks using <strong>Valgrind Callgrind</strong> and <strong>KCachegrind</strong>.</p>
+<h2 id="tools-used">Tools Used<a class="headerlink" href="#tools-used" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="https://perf.wiki.kernel.org/"><code>perf</code></a></li>
+<li><a href="http://valgrind.org/"><code>valgrind --tool=callgrind</code></a></li>
+<li><a href="https://kcachegrind.sourceforge.net/html/Home.html"><code>kcachegrind</code></a></li>
+<li>Flat profile, call graph, and callee map analysis</li>
+</ul>
+<h2 id="key-hotspots-identified">Key Hotspots Identified<a class="headerlink" href="#key-hotspots-identified" title="Permanent link">#</a></h2>
+<h3 id="1-stdchronooperator">1. <code>std::chrono::operator&lt;=&gt;</code><a class="headerlink" href="#1-stdchronooperator" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">auto</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="k">operator</span><span class="o">&lt;=&gt;&lt;</span><span class="kt">long</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ratio</span><span class="o">&lt;</span><span class="mf">1l</span><span class="p">,</span><span class="w"> </span><span class="mf">1000000000l</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ratio</span><span class="o">&lt;</span><span class="mf">1l</span><span class="p">,</span><span class="w"> </span><span class="mf">1000000000l</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span>
+</code></pre></div>
+<ul>
+<li><strong>Inclusive:</strong> ~2.9B cycles</li>
+<li><strong>Self:</strong> ~2.9B cycles</li>
+<li><strong>Calls:</strong> ~57M</li>
+<li>Appears in:
+  <div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">today</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">)</span><span class="w"> </span><span class="p">...</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">today</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">stop</span><span class="p">)</span><span class="w">  </span><span class="p">...</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_time</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">heart_beat_interval</span><span class="p">)</span><span class="w"> </span><span class="p">...</span>
+</code></pre></div></li>
+</ul>
+<h3 id="2-stdchronodurationcount">2. <code>std::chrono::duration::count()</code><a class="headerlink" href="#2-stdchronodurationcount" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration</span><span class="o">&lt;</span><span class="kt">long</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nano</span><span class="o">&gt;::</span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+</code></pre></div>
+<ul>
+<li><strong>Self:</strong> ~1.8B cycles</li>
+<li><strong>Calls:</strong> ~231M</li>
+<li>Pure accessor, but called from every comparison</li>
+</ul>
+<h3 id="3-iextransport_ttransport_handler">3. <code>iex::transport_t::transport_handler(...)</code><a class="headerlink" href="#3-iextransport_ttransport_handler" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Inclusive:</strong> ~56B cycles</li>
+<li><strong>Self:</strong> ~3B cycles</li>
+<li><strong>Calls:</strong> ~19M</li>
+</ul>
+<p>This is the driver of the event loop, and indirectly responsible for millions of time comparisons and filter applications.</p>
+<h3 id="4-stdunordered_map-internals">4. <code>std::unordered_map</code> Internals<a class="headerlink" href="#4-stdunordered_map-internals" title="Permanent link">#</a></h3>
+<ul>
+<li><code>std::_Hashtable</code>, <code>_Hash_node</code>, and <code>std::__detail</code> symbols total:</li>
+<li><strong>Inclusive:</strong> ~8.3B cycles</li>
+<li>High lookup and insert volume due to symbol mapping</li>
+</ul>
+<h2 id="performance-analysis">Performance Analysis<a class="headerlink" href="#performance-analysis" title="Permanent link">#</a></h2>
+<ul>
+<li><strong>Hot paths</strong> show excessive use of <code>std::chrono::duration</code> and related operators.</li>
+<li>Cost comes from abstraction layering: templates, type casting, virtual calls, and inline barriers.</li>
+</ul>
+<h2 id="optimization-strategies">Optimization Strategies<a class="headerlink" href="#optimization-strategies" title="Permanent link">#</a></h2>
+<h3 id="replace-time-comparisons">Replace Time Comparisons<a class="headerlink" href="#replace-time-comparisons" title="Permanent link">#</a></h3>
+<p>Original:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">today</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">)</span><span class="w"> </span><span class="p">...</span>
+</code></pre></div>
+<p>Optimized:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int64_t</span><span class="w"> </span><span class="n">now_ns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">time_since_epoch</span><span class="p">().</span><span class="n">count</span><span class="p">();</span>
+<span class="kt">int64_t</span><span class="w"> </span><span class="n">start_ns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">today</span><span class="p">.</span><span class="n">time_since_epoch</span><span class="p">().</span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">.</span><span class="n">count</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now_ns</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">start_ns</span><span class="p">)</span><span class="w"> </span><span class="p">...</span>
+</code></pre></div>
+<h3 id="use-raw-timestamps-in-hot-loops">Use Raw Timestamps in Hot Loops<a class="headerlink" href="#use-raw-timestamps-in-hot-loops" title="Permanent link">#</a></h3>
+<p>Avoid instantiating <code>std::chrono::time_point</code> inside per-tick message processing.</p>
+<h3 id="flatten-container-usage">Flatten Container Usage<a class="headerlink" href="#flatten-container-usage" title="Permanent link">#</a></h3>
+<p>Replace <code>std::unordered_map&lt;K,V&gt;</code> with <code>std::vector&lt;uint64_t&gt;</code> + binary search where keyspace is dense and flat.</p>
+<h2 id="lessons-learned">Lessons Learned<a class="headerlink" href="#lessons-learned" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Observation</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High cost of <code>std::chrono</code> ops</td>
+<td>Use <code>int64_t</code> timestamps</td>
+</tr>
+<tr>
+<td>Operator overloads not optimized</td>
+<td>Avoid templated comparisons in hot path</td>
+</tr>
+<tr>
+<td>Containers impact performance</td>
+<td>Consider flat maps for known contract ID range</td>
+</tr>
+<tr>
+<td>Filters and EMA computation</td>
+<td>Profiled but not yet optimized — low hanging fruit later</td>
+</tr>
+</tbody>
+</table>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">#</a></h2>
+<p>This profiling session helped uncover unexpected hotspots in high-level constructs. By peeling away abstraction where it matters (timing logic, container lookups), substantial CPU time can be reclaimed. Profiling is not just about finding bugs — it's about finding what matters.</p>
+<p><em>Authored by Steven Varga, June 2025</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <div style="background: #f8f8f8; padding: 1em; font-size: 1.5em; display: flex; justify-content: space-between; align-items: center;">
+  <div style="margin-left: 1%;">
+    Blockchain infra, cryptographic protocols, or trading systems in C++, Rust, or CUDA? 
+    <a href="mailto:info@vargaconsulting.ca" style="color: #3b82f6;">Let’s work together →</a>
+  </div>
+  <div style="margin-right: 1%; text-align: right;">
+    © 2017–2025 Varga Consulting, Toronto, ON, Canada 🇨🇦
+  </div>
+</div>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.0.1/dist/bundle/asciinema-player.js"></script>
+      
+    
+  </body>
+</html>

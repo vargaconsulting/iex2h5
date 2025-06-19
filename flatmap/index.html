@@ -1,0 +1,509 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Base40-Compressed Symbol Encoding with Embedded Index (64-bit Key Format) - IEX2H5</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.0.1/dist/bundle/asciinema-player.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#base40-compressed-symbol-encoding-with-embedded-index-64-bit-key-format" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      <!-- Custom header inserted into the <body> before content -->
+<div style="background: #f8f8f8; padding: 1em; font-size: 1.5em;">
+  <div style="text-align: left; margin-left: 1%;">
+    IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5
+  </div>
+</div>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="IEX2H5" class="md-nav__button md-logo" aria-label="IEX2H5" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    IEX2H5
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../consumers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Consumers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Generics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backtesting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../file-format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    File Format
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Profileing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../download-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Download Demo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encoding-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Encoding Layout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#base40-alphabet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Base40 Alphabet
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="base40-compressed-symbol-encoding-with-embedded-index-64-bit-key-format">Base40-Compressed Symbol Encoding with Embedded Index (64-bit Key Format)<a class="headerlink" href="#base40-compressed-symbol-encoding-with-embedded-index-64-bit-key-format" title="Permanent link">#</a></h1>
+<p>This document outlines a compact and efficient encoding scheme for representing IEX 8-character symbols along with a 14-bit internal index using a single <code>uint64_t</code>. The design is ideal for high-performance symbol table lookups, memory-efficient storage, and cache-friendly data access patterns.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
+<p>Each IEX symbol is:</p>
+<ul>
+<li>Exactly <strong>8 characters</strong>, space-padded on the right</li>
+<li>Comprised of a limited set of uppercase letters, digits, and a few special characters</li>
+<li>Represented in ASCII as 8 bytes (64 bits)</li>
+</ul>
+<p>This encoding compresses the symbol into <strong>50 bits using base40</strong>, leaving <strong>14 bits</strong> for an internal index — all packed into a single 64-bit unsigned integer.</p>
+<h2 id="encoding-layout">Encoding Layout<a class="headerlink" href="#encoding-layout" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Bits</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base40 Symbol</td>
+<td>50</td>
+<td>Encoded from up to 9 characters</td>
+</tr>
+<tr>
+<td>Internal Index ID</td>
+<td>14</td>
+<td>Custom ID (up to 16,383 values)</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td>64</td>
+<td>Fits in <code>uint64_t</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="base40-alphabet">Base40 Alphabet<a class="headerlink" href="#base40-alphabet" title="Permanent link">#</a></h2>
+<p>The chosen alphabet supports IEX-compatible symbols and includes:</p>
+<div class="highlight"><pre><span></span><code>ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-\_␣  ← total: 40
+
+````
+
+Where `&#39;␣&#39;` is the space character.
+
+Each character maps to an integer in `[0, 39]`.
+
+## Encoding Logic
+
+- Symbols are mapped to base-40 digits, packed into the upper 50 bits
+- The internal index is stored in the lower 14 bits
+- The encoded value is stored in a `uint64_t`
+
+```cpp
+uint64_t encode(std::string_view symbol, uint16_t index);
+std::string decode_symbol(uint64_t packed);
+uint16_t decode_index(uint64_t packed);
+````
+
+* If fewer than 9 base40 characters are provided, trailing positions are filled with `&#39; &#39;` (index 39)
+* Maximum of 9 base40 characters can be encoded within 50 bits
+
+## Advantages
+
+*  **Space-efficient**: 1 symbol + 1 index in 8 bytes
+*  **Fast lookup**: use as a direct key in sorted vectors or flat hash maps
+*  **One-pass decode**: no heap allocation or complex parsing
+*  **Reversible**: lossless compression + recovery of symbol and index
+*  **Index-embedded keys**: excellent for symbol-to-contract mapping
+
+## Caveats
+
+* Symbols must be validated to contain only allowed base40 characters
+* Lexicographical sorting may require care due to base40 digit mapping
+* Cannot encode arbitrary Unicode or lowercase letters
+
+## Example Usage
+
+```cpp
+using compressed_symbol_t = uint64_t;
+
+compressed_symbol_t key = encode(&quot;AAPL&quot;, 1337);
+
+std::string sym = decode_symbol(key);     // &quot;AAPL&quot;
+uint16_t idx = decode_index(key);         // 1337
+</code></pre></div>
+<h2 id="applications">Applications<a class="headerlink" href="#applications" title="Permanent link">#</a></h2>
+<ul>
+<li>Trading system symbol → contract ID mapping</li>
+<li>Fast in-memory symbol resolution tables</li>
+<li>Compact serialization of symbol-index pairs</li>
+</ul>
+<p><em>Varga Consulting · 2025 · MIT License</em></p>
+<p>```</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <div style="background: #f8f8f8; padding: 1em; font-size: 1.5em; display: flex; justify-content: space-between; align-items: center;">
+  <div style="margin-left: 1%;">
+    Blockchain infra, cryptographic protocols, or trading systems in C++, Rust, or CUDA? 
+    <a href="mailto:info@vargaconsulting.ca" style="color: #3b82f6;">Let’s work together →</a>
+  </div>
+  <div style="margin-right: 1%; text-align: right;">
+    © 2017–2025 Varga Consulting, Toronto, ON, Canada 🇨🇦
+  </div>
+</div>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.0.1/dist/bundle/asciinema-player.js"></script>
+      
+    
+  </body>
+</html>
