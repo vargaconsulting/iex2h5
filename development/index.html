@@ -564,10 +564,11 @@
 <h2 id="local-development-environment">Local Development Environment<a class="headerlink" href="#local-development-environment" title="Permanent link">#</a></h2>
 <p>To build and test <code>iex2h5</code>, the following tools are required:</p>
 <h3 id="system-dependencies">System Dependencies<a class="headerlink" href="#system-dependencies" title="Permanent link">#</a></h3>
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>libhdf5-dev<span class="w"> </span>pigz
+<p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>libhdf5-dev<span class="w"> </span>pigz
 pipx<span class="w"> </span>install<span class="w"> </span>mkdocs
 pipx<span class="w"> </span>inject<span class="w"> </span>mkdocs<span class="w"> </span>mkdocs-material
 </code></pre></div>
+SPDX-License-Identifier: MIT</p>
 <h3 id="shipped-with-the-project">Shipped with the Project<a class="headerlink" href="#shipped-with-the-project" title="Permanent link">#</a></h3>
 <p>The following third-party libraries are bundled under <code>thirdparty/</code> and integrated directly via CMake. Each is provided under its original license, as noted below.</p>
 <table>
@@ -581,16 +582,28 @@ pipx<span class="w"> </span>inject<span class="w"> </span>mkdocs<span class="w">
 </thead>
 <tbody>
 <tr>
-<td><strong>libpcap</strong></td>
-<td>v1.10.4</td>
-<td>Minimal, in-tree build of packet capture library</td>
-<td><a href="licenses/pcap">BSD 3-Clause</a></td>
-</tr>
-<tr>
 <td><strong>h5cpp</strong></td>
 <td>v1.10.8</td>
 <td>Modern C++17 interface to HDF5</td>
 <td><a href="../licenses/h5cpp">MIT</a></td>
+</tr>
+<tr>
+<td><strong>hdf5</strong></td>
+<td>v1.14.3</td>
+<td>C interface and binary format for storing scientific data</td>
+<td><a href="../licenses/hdf5">BSD-like</a></td>
+</tr>
+<tr>
+<td><strong>libzng</strong></td>
+<td>v2.1.6</td>
+<td>Optimized zlib-compatible compression library</td>
+<td><a href="../licenses/libzng">Zlib</a></td>
+</tr>
+<tr>
+<td><strong>threadpool</strong></td>
+<td>v2024.03</td>
+<td>Lightweight C++17 thread pool by Barak Shoshany</td>
+<td><a href="licenses/threadpool">MIT</a></td>
 </tr>
 <tr>
 <td><strong>armadillo</strong></td>
@@ -626,7 +639,7 @@ pipx<span class="w"> </span>inject<span class="w"> </span>mkdocs<span class="w">
 <td><strong>hiredis</strong></td>
 <td>v1.2.0</td>
 <td>C client for Redis, used for low-level Redis I/O</td>
-<td><a href="licenses/hiredis">BSD 3-Clause</a></td>
+<td><a href="../licenses/hiredis">BSD 3-Clause</a></td>
 </tr>
 <tr>
 <td><strong>redis-plus-plus</strong></td>
@@ -743,6 +756,28 @@ pip<span class="w"> </span>install<span class="w"> </span>mkdocs<span class="w">
 <li>Ensure all changes compile cleanly with <code>-Wall -Wextra -Werror</code>.</li>
 <li>Document any public-facing or structural changes under <code>docs/</code>.</li>
 </ul>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">my_type_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">status</span><span class="p">(...){</span>
+<span class="w">        </span><span class="p">....</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">on_day_begin</span><span class="p">(</span><span class="n">time_point</span><span class="w"> </span><span class="n">day</span><span class="p">)</span><span class="w"> </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">status</span><span class="p">(</span><span class="s">&quot;▫ {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">day</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">flush</span><span class="p">;</span><span class="w">   </span><span class="c1">// newly created irts dataset</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">h5</span><span class="o">::</span><span class="n">error</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">dataset</span><span class="o">::</span><span class="n">create</span><span class="o">&amp;</span><span class="w"> </span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">status</span><span class="p">(</span><span class="s">&quot;▪ {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">day</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">flush</span><span class="p">;</span><span class="w">   </span><span class="c1">// overwrite existing dataset</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">status</span><span class="p">(</span><span class="s">&quot;○ {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">day</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">flush</span><span class="p">;</span><span class="w">   </span><span class="c1">// some other problem</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">on_heart_beat</span><span class="p">(</span><span class="n">time_point</span><span class="w"> </span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">status</span><span class="p">(</span><span class="s">&quot; {:r}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">flush</span><span class="p">;</span><span class="w"> </span><span class="c1">// where {:r} reset line/print into same line</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">on_day_end</span><span class="p">(</span><span class="n">time_point</span><span class="w"> </span><span class="n">day</span><span class="p">)</span><span class="w"> </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">status</span><span class="p">(</span><span class="s">&quot; ✓&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w">           </span><span class="c1">// succesful day closure</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">status</span><span class="p">(</span><span class="s">&quot; ✗&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w">           </span><span class="c1">// failed day closure</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">state</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 
