@@ -13,13 +13,13 @@
         <meta name="author" content="Steven Varga">
       
       
-        <link rel="canonical" href="https://steven-varga.ca/flatmap/">
+        <link rel="canonical" href="https://steven-varga.ca/instruments-compression/">
       
       
-        <link rel="prev" href="../layout/">
+        <link rel="prev" href="../flatmap/">
       
       
-        <link rel="next" href="../instruments-compression/">
+        <link rel="next" href="../radix64/">
       
       
         
@@ -30,7 +30,7 @@
     
     
       
-        <title>Flat Maps - VargaLABS</title>
+        <title>Compression - VargaLABS</title>
       
     
     
@@ -93,7 +93,7 @@
     <meta property="og:site_name" content="VargaLABS" />
     <meta property="og:title" content="VargaLABS" />
     <meta property="og:description" content="IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5" />
-    <meta property="og:url" content="https://steven-varga.ca/flatmap/" />
+    <meta property="og:url" content="https://steven-varga.ca/instruments-compression/" />
     <meta property="og:image" content="https://steven-varga.ca//assets/social/og-default.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -103,7 +103,7 @@
     <meta name="twitter:image" content="https://steven-varga.ca//assets/social/og-default.png" />
 
     <!-- SEO -->
-    <link rel="canonical" href="https://steven-varga.ca/flatmap/" />
+    <link rel="canonical" href="https://steven-varga.ca/instruments-compression/" />
     <meta name="description" content="IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5" />
     <script type="application/ld+json">
     {
@@ -111,7 +111,7 @@
     "@type": "BlogPosting",
     "headline": "VargaLABS",
     "description": "IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5",
-    "url": "https://steven-varga.ca/flatmap/",
+    "url": "https://steven-varga.ca/instruments-compression/",
     "datePublished": "2010-01-01",
     "author": {
         "@type": "Person",
@@ -153,7 +153,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#what-is-a-flat-map" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -187,7 +187,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Flat Maps
+              Compression
             
           </span>
         </div>
@@ -512,6 +512,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../flatmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flat Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -529,7 +557,7 @@
   <span class="md-ellipsis">
     
   
-    Flat Maps
+    Compression
   
 
     
@@ -547,7 +575,7 @@
   <span class="md-ellipsis">
     
   
-    Flat Maps
+    Compression
   
 
     
@@ -571,10 +599,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-a-flat-map" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Is a Flat Map?
+        Overview
       
     </span>
   </a>
@@ -582,24 +610,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-flat-maps-work-well-here" class="md-nav__link">
+  <a href="#radix-64-symbol-encoding-for-iex2h5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Flat Maps Work Well Here
+        Radix 64 Symbol Encoding for IEX2H5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Radix 64 Symbol Encoding for IEX2H5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bit-budget-analysis-48-bit-and-radix64-alphabet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bit Budget Analysis (48-bit) and radix64 Alphabet
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#why-not-use-perfect-hashing" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#compact-radix64-encoding-of-ticker-index-ordering-properties" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Not Use Perfect Hashing?
+        Compact radix64 Encoding of Ticker + Index Ordering Properties
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-search-in-radix64-encoded-flat-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary Search in radix64-Encoded Flat Maps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-radix-64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why “Radix-64” ?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -607,34 +674,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../instruments-compression/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Compression
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -729,10 +768,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-a-flat-map" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Is a Flat Map?
+        Overview
       
     </span>
   </a>
@@ -740,24 +779,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-flat-maps-work-well-here" class="md-nav__link">
+  <a href="#radix-64-symbol-encoding-for-iex2h5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Flat Maps Work Well Here
+        Radix 64 Symbol Encoding for IEX2H5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Radix 64 Symbol Encoding for IEX2H5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bit-budget-analysis-48-bit-and-radix64-alphabet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bit Budget Analysis (48-bit) and radix64 Alphabet
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#why-not-use-perfect-hashing" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#compact-radix64-encoding-of-ticker-index-ordering-properties" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Not Use Perfect Hashing?
+        Compact radix64 Encoding of Ticker + Index Ordering Properties
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-search-in-radix64-encoded-flat-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary Search in radix64-Encoded Flat Maps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-radix-64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why “Radix-64” ?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -780,36 +858,76 @@
 
 
 
-  <h1>Flat Maps</h1>
-
-<p>In the IEX2H5 system — where data arrives as a <strong>high-frequency stream of ticks</strong> across many instruments — fast and efficient symbol lookup is essential. To achieve this, we use a <strong>flat map</strong>: a sorted vector of key–value pairs that provides both speed and simplicity, especially under heavy read workloads.</p>
-<p><img alt="prices" src="../assets/hashmap-comparison.png#float-right-50" />
-The performance comparison chart shown here is based on data provided by <a href="https://martin.ankerl.com/2019/04/01/hashmap-benchmarks-03-01-result-InsertHugeInt/">Martin Leitner-Ankerl</a>.</p>
-<h3 id="what-is-a-flat-map"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm10.78 2H19v12.18c-.26-.8-1.31-1.39-2.2-1.39h-1v-3a1 1 0 0 0-1-1h-6v-2h2a1 1 0 0 0 1-1v-2h2c1.03 0 1.87-.79 1.98-1.79M5 10.29l4.8 4.5v1a2 2 0 0 0 2 2V19H5z"/></svg></span> What Is a Flat Map?</h3>
-<p>A flat map is a lightweight associative container implemented as a <strong>sorted array</strong> of <code>(key, value)</code> pairs. Lookups are performed via <strong>binary search</strong> using <code>std::lower_bound</code>, making it ideal for scenarios with frequent reads and relatively few insertions.</p>
-<p>A typical example might look like:<code>std::vector&lt;std::pair&lt;std::string, uint16_t&gt;&gt; flat_map;</code> However, our implementation is even simpler and faster:<code>std::vector&lt;uint64_t&gt; flat_map;</code> 
-Here, each <code>uint64_t</code> value encodes both the <strong>symbol</strong> and its <strong>internal index</strong> using a compact base64 scheme. This reduces memory usage, improves cache locality, and enables zero-allocation binary search over fixed-width keys. The result is a fast, predictable, and cache-friendly structure that outperforms traditional hash maps or tree maps for symbol resolution — especially when dealing with thousands of instruments and millions of ticks per session.</p>
-<h3 id="why-flat-maps-work-well-here"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.1 1 4.1 2.8 5.5 0 .6-.4 2.2-2.8 4.5 0 0 3.5 0 6.5-2.5 1.1.3 2.3.5 3.5.5 5.5 0 10-3.6 10-8s-4.5-8-10-8m1 12h-2v-2h2zm1.8-5c-.3.4-.7.6-1.1.8-.3.2-.4.3-.5.5-.2.2-.2.4-.2.7h-2c0-.5.1-.8.3-1.1.2-.2.6-.5 1.1-.8.3-.1.5-.3.6-.5s.2-.5.2-.7c0-.3-.1-.5-.3-.7s-.5-.3-.8-.3-.5.1-.7.2q-.3.15-.3.6h-2c.1-.7.4-1.3.9-1.7s1.2-.5 2.1-.5 1.7.2 2.2.6.8 1 .8 1.7q.15.6-.3 1.2"/></svg></span> Why Flat Maps Work Well Here</h3>
-<ul>
-<li><strong>Cache-friendly</strong>: contiguous memory layout → faster lookups and better prefetching</li>
-<li><strong>Zero heap churn</strong>: avoids frequent node allocation like <code>std::map</code> or <code>std::unordered_map</code></li>
-<li><strong>Predictable performance</strong>: <code>O(log N)</code> lookups, <code>O(N)</code> insertions (batchable)</li>
-<li><strong>Deterministic</strong>: no hash functions, no resizing, no hash collisions</li>
-<li><strong>Sorting = fast bulk traversal</strong>: great for periodic summaries and compressions</li>
-</ul>
-<p>For workloads with a few thousand symbols and frequent reads (but relatively rare insertions), flat maps often <strong>outperform hash maps</strong> in real-world performance.</p>
-<h3 id="why-not-use-perfect-hashing"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M214.7.7c17.3 3.7 28.3 20.7 24.6 38L220.2 128h126.5l22-102.7C372.4 8 389.4-3 406.7.7s28.3 20.7 24.6 38L412.2 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32h-81.6L371 320h67.8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-81.6l-22 102.7c-3.7 17.3-20.7 28.3-38 24.6s-28.3-20.7-24.6-38l19.1-89.3H165.2l-22 102.7c-3.7 17.3-20.7 28.3-38 24.6s-28.3-20.7-24.6-38L99.8 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h81.6L141 192H73.2c-17.7 0-32-14.3-32-32s14.3-32 32-32h81.6l22-102.7C180.4 8 197.4-3 214.7.7M206.4 192 179 320h126.5l27.4-128z"/></svg></span> Why Not Use Perfect Hashing?</h3>
-<p>In theory, a <strong>perfect hash map</strong> — one that maps known symbols directly to index slots with no collisions — would be ideal for constant-time lookups.</p>
-<p>But in practice:</p>
+<p>The <code>radix64.hpp</code> header implements a highly compact encoding scheme for symbol names, designed to pack an <strong>8-character IEX-style symbol</strong> and a <strong>16-bit internal index</strong> into a single <code>uint64_t</code>. This representation enables <strong>high-performance lookups</strong>, <strong>low-memory overhead</strong>, and <strong>cache-friendly access patterns</strong> — making it ideal for real-time trading systems, contract mapping tables, or HDF5 serialization. By combining base-64 encoding with bit-packing, the system achieves fast, reversible, allocation-free symbol compression, without sacrificing flexibility or clarity.</p>
 <blockquote>
-<p><strong>We can’t build a perfect hash upfront, because we don’t know all the symbols ahead of time.</strong></p>
+<p><strong>Terminology.</strong> We use “<strong>radix-64</strong>” to mean a positional numeral system with base 64 over a chosen alphabet <span class="arithmatex">\(\Sigma\)</span> (6-bit digits, big-endian). This is <strong>not</strong> RFC 4648 Base64 encoding of bytes.</p>
 </blockquote>
-<p>In IEX feeds, symbols are <strong>not disseminated before trading starts</strong> — the stream begins with activity (trades or quotes), and new symbols may appear at any time. This makes it impossible to construct a fixed mapping ahead of time without either:</p>
+<h2 id="overview"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 11h8V3H3m0 18h8v-8H3m10 8h8v-8h-8m0-10v8h8V3"/></svg></span> Overview</h2>
+<p><img alt="memory layout" src="../assets/radix64-encoding-layout.png#float-right-30" />
+Each IEX symbol is exactly 8 characters (right-padded to length with the <strong>minimum-code</strong> sentinel, e.g., space with code 0), drawn from a radix-64 alphabet (A–Z, 0–9, selected punctuation), and stored in a compact 64-bit key with the symbol packed <strong>big-endian</strong> into the upper 48 bits (8×6) and a 16-bit contract index in the lower 16 bits; this order-preserving, reversible layout is <strong>space-efficient</strong> (symbol + index in 8 bytes), enables <strong>fast lookup</strong> as a single <code>uint64_t</code> key in sorted vectors or flat hash maps, and supports <strong>one-pass decode</strong> without heap allocation—note that at most <strong>8</strong> radix-64 characters fit in 48 bits.</p>
+<h1 id="radix-64-symbol-encoding-for-iex2h5"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.38 3 2.39 5.75c-.22.93-.5 1.57-.77 1.95-.33.48-.56.55-.81.55v1.5c.75 0 1.55-.4 2.05-1.19C19.87 8.94 22 3 22 3h-1.62l-1.69 4.05L17 3zM3.42 8.59 2 10l4.79 4.79L2 19.59 3.41 21l4.8-4.79L13 21l1.41-1.41-4.79-4.8L14.41 10 13 8.59l-4.79 4.79-4.8-4.79z"/></svg></span> Radix 64 Symbol Encoding for IEX2H5</h1>
+<p><img alt="memory layout" src="../assets/symbol-memory-layout.png#float-right-30" />
+The IEX specification uses 8-byte padded ASCII strings (left-aligned, space-padded) to represent symbols (e.g. <code>"AAPL    "</code>). Within the IEX protoicol (internally in the pcap format) they’re stored in <code>uint64_t</code>. To give you an example the memory Layout of <code>"APPLE   "</code> (Little Endian)
+is <code>"APPLE␣␣␣"</code> — 8 characters, padded with spaces. The resulting <code>uint64_t</code> value (in hex):<code>0x202020454C505041</code>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[0x41][0x50][0x50][0x4C][0x45][0x20][0x20][0x20]
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ↑                                      ↑
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> LSB                                   MSB
+</span></code></pre></div>
+Paper vs Memory might defeat intuition leading to a number ordering confusion on little endian platforms. Humans write numbers (and symbols) <strong>left-to-right</strong>, from the <strong>most significant</strong> to <strong>least significant</strong> digit. Memory in little-endian CPUs stores values <strong>from the least significant byte first</strong>.</p>
+<h2 id="bit-budget-analysis-48-bit-and-radix64-alphabet"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M328 112H184l-37.3-74.5c-1.8-3.6-2.7-7.6-2.7-11.6C144 11.6 155.6 0 169.9 0h172.2C356.4 0 368 11.6 368 25.9c0 4-.9 8-2.7 11.6zm-158.4 48h172.8l48.7 40.6C457.6 256 496 338 496 424.5c0 48.3-39.2 87.5-87.5 87.5H103.4C55.2 512 16 472.8 16 424.5 16 338 54.4 256 120.9 200.6zm90.4 64c-11 0-20 9-20 20v4c-28.8.3-52 23.7-52 52.5 0 25.7 18.5 47.6 43.9 51.8l41.7 7c6 1 10.4 6.2 10.4 12.3 0 6.9-5.6 12.5-12.5 12.5L216 384c-11 0-20 9-20 20s9 20 20 20h24v4c0 11 9 20 20 20s20-9 20-20v-4.7c25-4.1 44-25.7 44-51.8 0-25.7-18.5-47.6-43.9-51.8l-41.7-7c-6-1-10.4-6.2-10.4-12.3 0-6.9 5.6-12.5 12.5-12.5H288c11 0 20-9 20-20s-9-20-20-20h-8v-4c0-11-9-20-20-20z"/></svg></span> Bit Budget Analysis (48-bit) and  radix64 Alphabet</h2>
+<p><img alt="memory layout" src="../assets/radix64-alphabet.png#float-left-40" />
+We allocate <strong>48 bits</strong> for symbol/string encoding, leaving <strong>16 bits</strong> for indexing them. Let <span class="arithmatex">\(b\)</span> be the number of bits per character. To store <strong>8 characters</strong> in 48 bits we have  <span class="arithmatex">\(b = \frac{48}{8} = 6.00\)</span> available bits per character, similarly if we wanted to store <strong>9 characters</strong> we have to squeeze each character into:  <span class="arithmatex">\(b = \frac{48}{9} \approx 5.33\)</span> bits. Since fractional bits would make our day misarable we have to settle with <span class="arithmatex">\( \left\lfloor 5.33 \right\rfloor = 5\)</span>. So it is a tossup between 5 or 6 bits. </p>
+<p>Approaching it from the other side we empirically measured <strong>there are 34 different characters</strong> making up the IEX symbol alphabet. Since <span class="arithmatex">\( log_2(34) \approx 5.0874 \)</span> and we strongly dislike fractional bits we need at least <span class="arithmatex">\( \left\lceil log_2(34) \right\rceil = 6\)</span> bits to represent a single character.
+$$
+\text{encoded} = \sum_{i=0}^{n-1} \text{alphabet_index}[i] \cdot 64^{n - 1 - i}
+$$
+<strong>Conclusion:</strong> A <strong>base-64 alphabet</strong> lets us encode exactly <strong>8 characters in 48 bits</strong> — with 30 extra characters to make it applicable for encoding tickers of other exchanges.</p>
+<h2 id="compact-radix64-encoding-of-ticker-index-ordering-properties"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.5c-3.81 0-6.5 2.743-6.5 6.119 0 1.536.632 2.572 1.425 3.56.172.215.347.422.527.635l.096.112c.21.25.427.508.63.774.404.531.783 1.128.995 1.834a.75.75 0 0 1-1.436.432c-.138-.46-.397-.89-.753-1.357a18 18 0 0 0-.582-.714l-.092-.11c-.18-.212-.37-.436-.555-.667C4.87 12.016 4 10.651 4 8.618 4 4.363 7.415 1 12 1s8 3.362 8 7.619c0 2.032-.87 3.397-1.755 4.5-.185.23-.375.454-.555.667l-.092.109c-.21.248-.405.481-.582.714-.356.467-.615.898-.753 1.357a.751.751 0 0 1-1.437-.432c.213-.706.592-1.303.997-1.834.202-.266.419-.524.63-.774l.095-.112c.18-.213.355-.42.527-.634.793-.99 1.425-2.025 1.425-3.561C18.5 5.243 15.81 2.5 12 2.5M8.75 18h6.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5m.75 3.75a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75"/></svg></span> Compact radix64 Encoding of Ticker + <span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5h10v2H12m0 12v-2h10v2m-10-8h10v2H12m-3 0v2l-3.33 4H9v2H3v-2l3.33-4H3v-2M7 3H5c-1.1 0-2 .9-2 2v6h2V9h2v2h2V5a2 2 0 0 0-2-2m0 4H5V5h2Z"/></svg></span> Index Ordering Properties</h2>
+<p><img alt="memory layout" src="../assets/radix64-order.png#float-right-40" /></p>
+<p>When encoding ticker symbols using 6-bit characters (i.e. a base-64 alphabet), we concatenate the character codes to form a single base-64 number. Because the encoding alphabet is lexicographically ordered, this process preserves the relative order of the original strings.
+As a result, comparisons between encoded tickers can be performed using fast integer arithmetic instead of slower string-based comparisons — a key performance benefit for high-frequency symbol lookups.</p>
+<p>The table on the right compares the original input order, decoded symbol, the index from <code>original[i]</code>, and the lexicographically sorted symbol/index from <code>sorted[i]</code>.
+Correct lexicographic behavior is preserved when using the fixed radix64 encoding logic.</p>
+<h2 id="binary-search-in-radix64-encoded-flat-maps"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19.31 18.9 3.08 3.1L21 23.39l-3.12-3.07c-.69.43-1.51.68-2.38.68-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5 4.5 2 4.5 4.5c0 .88-.25 1.71-.69 2.4m-3.81.1a2.5 2.5 0 0 0 0-5 2.5 2.5 0 0 0 0 5M21 4v2H3V4zM3 16v-2h6v2zm0-5V9h18v2h-2.03c-1.01-.63-2.2-1-3.47-1s-2.46.37-3.47 1z"/></svg></span> Binary Search in radix64-Encoded Flat Maps</h2>
+<p>The <code>encode(symbol)</code> function preserves lexical order, making it ideal for binary search over sorted containers. For example:</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ranges</span><span class="o">::</span><span class="n">lower_bound</span><span class="p">(</span><span class="n">sorted</span><span class="p">,</span><span class="w"> </span><span class="n">utils</span><span class="o">::</span><span class="n">radix64</span><span class="o">::</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;ocean   &quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">sorted</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">symbol</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utils</span><span class="o">::</span><span class="n">radix64</span><span class="o">::</span><span class="n">decode</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">assert</span><span class="p">(</span><span class="n">symbol</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ocean   &quot;</span><span class="p">);</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="n">TRACE</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;not found...&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>This is a <strong>perfect match for fixed-width symbols</strong>, such as IEX 8-character tickers.</p>
+<p>For trimmed symbols (e.g., <code>"ocean"</code> instead of <code>"ocean   "</code>), a post-check is needed to backtrack if necessary:</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ranges</span><span class="o">::</span><span class="n">lower_bound</span><span class="p">(</span><span class="n">sorted</span><span class="p">,</span><span class="w"> </span><span class="n">utils</span><span class="o">::</span><span class="n">radix64</span><span class="o">::</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;ocean&quot;</span><span class="p">));</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">sorted</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="c1">// `it` may point to the next symbol (e.g., &quot;planet&quot;) — backtrack and verify</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">symbol</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utils</span><span class="o">::</span><span class="n">radix64</span><span class="o">::</span><span class="n">decode</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="o">--</span><span class="n">it</span><span class="p">));</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">symbol</span><span class="p">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s">&quot;ocean&quot;</span><span class="p">))</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="p">;</span><span class="w"> </span><span class="c1">// Found &quot;ocean&quot;, possibly padded</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="k">else</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="n">TRACE</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;not found...&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="n">TRACE</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;not found...&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="why-radix-64">Why “Radix-64” ?</h2>
+<p>Short version: I called it <strong>radix-64</strong> because we are using a <strong>positional numeral system in base 64</strong> (6-bit digits) over a custom, ordered alphabet—<strong>not</strong> the RFC 4648 <strong>Base64</strong> byte codec. </p>
 <ul>
-<li>a separate discovery phase (which delays startup), or</li>
-<li>backpatching (which breaks streaming assumptions)</li>
+<li><strong>Definition fit.</strong> Each character <span class="arithmatex">\(c\in A\)</span> is mapped via a monotone <span class="arithmatex">\(\sigma:A\to\{0,\dots,63\}\)</span> and encoded</li>
 </ul>
-<p>Flat maps let us build the mapping <strong>on the fly</strong>, adding symbols as they first appear, while preserving fast lookup and ordered access.</p>
+<div class="arithmatex">\[
+    E(s_0\ldots s_{N-1})=\sum_{i=0}^{N-1}\sigma(s_i)\,64^{\,N-1-i},
+\]</div>
+<p>i.e., a base-64 <strong>radix</strong> expansion (big-endian 6-bit digits). That’s exactly “radix-64”.
+* <strong>Avoids ambiguity.</strong> “Base64” typically means <strong>RFC 4648</strong> (bytes→ASCII using <code>A–Z a–z 0–9 + /</code> with <code>=</code> padding). Radix64 scheme: custom alphabet, order-preserving, integer-comparables. Different thing → different name.
+* <strong>Signals the key property.</strong> Saying “radix-64” primes the reader for <strong>order-preserving</strong> integer compares under the usual conditions: monotone <span class="arithmatex">\(\sigma\)</span>, fixed length or min-code padding, big-endian digits.</p>
+<ol>
+<li><strong>Requirements:</strong> 6-bit chars, lex-order == unsigned-int order, fits in 48 bits.</li>
+<li><strong>Model:</strong> treat chars as <strong>digits</strong> in base 64 with a monotone <span class="arithmatex">\(\sigma\)</span>.</li>
+<li><strong>Constraints:</strong> fixed length or pad with smallest code; encode MSB-first.</li>
+<li><strong>Verification:</strong> first differing index <span class="arithmatex">\(k\)</span> ⇒ tail <span class="arithmatex">\(&lt;64^{N-1-k}\)</span> ⇒ <span class="arithmatex">\(x&lt;_{\text{lex}}y \iff E(x)&lt;E(y)\)</span>.</li>
+<li><strong>Naming:</strong> picking radix64 describes (2) precisely what the encoding does, and isn’t overloaded by (RFC) connotations → <strong>radix-64 positional encoding</strong>.</li>
+</ol>
 
 
 

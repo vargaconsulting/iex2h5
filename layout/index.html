@@ -13,13 +13,13 @@
         <meta name="author" content="Steven Varga">
       
       
-        <link rel="canonical" href="https://steven-varga.ca/flatmap/">
+        <link rel="canonical" href="https://steven-varga.ca/layout/">
       
       
-        <link rel="prev" href="../layout/">
+        <link rel="prev" href="../guide/">
       
       
-        <link rel="next" href="../instruments-compression/">
+        <link rel="next" href="../flatmap/">
       
       
         
@@ -30,7 +30,7 @@
     
     
       
-        <title>Flat Maps - VargaLABS</title>
+        <title>Data Layout - VargaLABS</title>
       
     
     
@@ -93,7 +93,7 @@
     <meta property="og:site_name" content="VargaLABS" />
     <meta property="og:title" content="VargaLABS" />
     <meta property="og:description" content="IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5" />
-    <meta property="og:url" content="https://steven-varga.ca/flatmap/" />
+    <meta property="og:url" content="https://steven-varga.ca/layout/" />
     <meta property="og:image" content="https://steven-varga.ca//assets/social/og-default.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -103,7 +103,7 @@
     <meta name="twitter:image" content="https://steven-varga.ca//assets/social/og-default.png" />
 
     <!-- SEO -->
-    <link rel="canonical" href="https://steven-varga.ca/flatmap/" />
+    <link rel="canonical" href="https://steven-varga.ca/layout/" />
     <meta name="description" content="IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5" />
     <script type="application/ld+json">
     {
@@ -111,7 +111,7 @@
     "@type": "BlogPosting",
     "headline": "VargaLABS",
     "description": "IEX2H5 — Fast, Structured Conversion from IEX TOPS to HDF5",
-    "url": "https://steven-varga.ca/flatmap/",
+    "url": "https://steven-varga.ca/layout/",
     "datePublished": "2010-01-01",
     "author": {
         "@type": "Person",
@@ -153,7 +153,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#what-is-a-flat-map" class="md-skip">
+        <a href="#structure-of-the-rts-price-matrix" class="md-skip">
           Skip to content
         </a>
       
@@ -187,7 +187,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Flat Maps
+              Data Layout
             
           </span>
         </div>
@@ -436,82 +436,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../layout/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data Layout
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Symbols
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Symbols
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
     
   
   
@@ -529,7 +453,7 @@
   <span class="md-ellipsis">
     
   
-    Flat Maps
+    Data Layout
   
 
     
@@ -547,7 +471,7 @@
   <span class="md-ellipsis">
     
   
-    Flat Maps
+    Data Layout
   
 
     
@@ -571,10 +495,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-a-flat-map" class="md-nav__link">
+  <a href="#structure-of-the-rts-price-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Is a Flat Map?
+        Structure of the RTS Price Matrix
       
     </span>
   </a>
@@ -582,10 +506,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-flat-maps-work-well-here" class="md-nav__link">
+  <a href="#tickdata-stream" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Flat Maps Work Well Here
+        Tickdata stream
       
     </span>
   </a>
@@ -593,10 +517,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-not-use-perfect-hashing" class="md-nav__link">
+  <a href="#stats-intraday-trade-statistics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Not Use Perfect Hashing?
+        /stats/ — Intraday Trade Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compression
       
     </span>
   </a>
@@ -607,6 +542,80 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Symbols
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Symbols
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../flatmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flat Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -729,10 +738,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-a-flat-map" class="md-nav__link">
+  <a href="#structure-of-the-rts-price-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Is a Flat Map?
+        Structure of the RTS Price Matrix
       
     </span>
   </a>
@@ -740,10 +749,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-flat-maps-work-well-here" class="md-nav__link">
+  <a href="#tickdata-stream" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Flat Maps Work Well Here
+        Tickdata stream
       
     </span>
   </a>
@@ -751,10 +760,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-not-use-perfect-hashing" class="md-nav__link">
+  <a href="#stats-intraday-trade-statistics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Not Use Perfect Hashing?
+        /stats/ — Intraday Trade Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compression
       
     </span>
   </a>
@@ -780,36 +800,91 @@
 
 
 
-  <h1>Flat Maps</h1>
+  <h1>Data Layout</h1>
 
-<p>In the IEX2H5 system — where data arrives as a <strong>high-frequency stream of ticks</strong> across many instruments — fast and efficient symbol lookup is essential. To achieve this, we use a <strong>flat map</strong>: a sorted vector of key–value pairs that provides both speed and simplicity, especially under heavy read workloads.</p>
-<p><img alt="prices" src="../assets/hashmap-comparison.png#float-right-50" />
-The performance comparison chart shown here is based on data provided by <a href="https://martin.ankerl.com/2019/04/01/hashmap-benchmarks-03-01-result-InsertHugeInt/">Martin Leitner-Ankerl</a>.</p>
-<h3 id="what-is-a-flat-map"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm10.78 2H19v12.18c-.26-.8-1.31-1.39-2.2-1.39h-1v-3a1 1 0 0 0-1-1h-6v-2h2a1 1 0 0 0 1-1v-2h2c1.03 0 1.87-.79 1.98-1.79M5 10.29l4.8 4.5v1a2 2 0 0 0 2 2V19H5z"/></svg></span> What Is a Flat Map?</h3>
-<p>A flat map is a lightweight associative container implemented as a <strong>sorted array</strong> of <code>(key, value)</code> pairs. Lookups are performed via <strong>binary search</strong> using <code>std::lower_bound</code>, making it ideal for scenarios with frequent reads and relatively few insertions.</p>
-<p>A typical example might look like:<code>std::vector&lt;std::pair&lt;std::string, uint16_t&gt;&gt; flat_map;</code> However, our implementation is even simpler and faster:<code>std::vector&lt;uint64_t&gt; flat_map;</code> 
-Here, each <code>uint64_t</code> value encodes both the <strong>symbol</strong> and its <strong>internal index</strong> using a compact base64 scheme. This reduces memory usage, improves cache locality, and enables zero-allocation binary search over fixed-width keys. The result is a fast, predictable, and cache-friendly structure that outperforms traditional hash maps or tree maps for symbol resolution — especially when dealing with thousands of instruments and millions of ticks per session.</p>
-<h3 id="why-flat-maps-work-well-here"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.1 1 4.1 2.8 5.5 0 .6-.4 2.2-2.8 4.5 0 0 3.5 0 6.5-2.5 1.1.3 2.3.5 3.5.5 5.5 0 10-3.6 10-8s-4.5-8-10-8m1 12h-2v-2h2zm1.8-5c-.3.4-.7.6-1.1.8-.3.2-.4.3-.5.5-.2.2-.2.4-.2.7h-2c0-.5.1-.8.3-1.1.2-.2.6-.5 1.1-.8.3-.1.5-.3.6-.5s.2-.5.2-.7c0-.3-.1-.5-.3-.7s-.5-.3-.8-.3-.5.1-.7.2q-.3.15-.3.6h-2c.1-.7.4-1.3.9-1.7s1.2-.5 2.1-.5 1.7.2 2.2.6.8 1 .8 1.7q.15.6-.3 1.2"/></svg></span> Why Flat Maps Work Well Here</h3>
+<p><img alt="prices" src="../assets/data-layout.png#float-right-50" />
+The <code>iex2h5</code> system organizes market data into a structured <strong>HDF5 container</strong>, which behaves like a logical file system — grouping time-series datasets into typed, self-describing directories.</p>
+<p>It supports two primary representations of the market:</p>
 <ul>
-<li><strong>Cache-friendly</strong>: contiguous memory layout → faster lookups and better prefetching</li>
-<li><strong>Zero heap churn</strong>: avoids frequent node allocation like <code>std::map</code> or <code>std::unordered_map</code></li>
-<li><strong>Predictable performance</strong>: <code>O(log N)</code> lookups, <code>O(N)</code> insertions (batchable)</li>
-<li><strong>Deterministic</strong>: no hash functions, no resizing, no hash collisions</li>
-<li><strong>Sorting = fast bulk traversal</strong>: great for periodic summaries and compressions</li>
+<li><strong>IRTS (Irregular Time Series):</strong> tick-by-tick bid, ask, and trade events</li>
+<li><strong>RTS (Regular Time Series):</strong> resampled OHLC-style snapshots at fixed intervals</li>
 </ul>
-<p>For workloads with a few thousand symbols and frequent reads (but relatively rare insertions), flat maps often <strong>outperform hash maps</strong> in real-world performance.</p>
-<h3 id="why-not-use-perfect-hashing"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M214.7.7c17.3 3.7 28.3 20.7 24.6 38L220.2 128h126.5l22-102.7C372.4 8 389.4-3 406.7.7s28.3 20.7 24.6 38L412.2 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32h-81.6L371 320h67.8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-81.6l-22 102.7c-3.7 17.3-20.7 28.3-38 24.6s-28.3-20.7-24.6-38l19.1-89.3H165.2l-22 102.7c-3.7 17.3-20.7 28.3-38 24.6s-28.3-20.7-24.6-38L99.8 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h81.6L141 192H73.2c-17.7 0-32-14.3-32-32s14.3-32 32-32h81.6l22-102.7C180.4 8 197.4-3 214.7.7M206.4 192 179 320h126.5l27.4-128z"/></svg></span> Why Not Use Perfect Hashing?</h3>
-<p>In theory, a <strong>perfect hash map</strong> — one that maps known symbols directly to index slots with no collisions — would be ideal for constant-time lookups.</p>
-<p>But in practice:</p>
+<p>While the example diagram shows <strong>both IRTS and RTS stored in a single HDF5 file</strong>, this is mostly for convenience and demonstration purposes. In real-world, high-throughput deployments (e.g. streaming tick data from multiple sources 24/7), this is <strong>not recommended</strong> without an extra layer due to HDF5’s <strong>Single-Writer, Multiple-Reader (SWMR)</strong> constraint.</p>
+<p>🗃 <strong>Recommended Practice:</strong> Store <strong>IRTS</strong> (the raw tick stream) in compressed, append-only containers  → e.g. one file per exchange say: <code>iex.h5, dydx.h5, binance.h5, ...</code> then generate <strong>RTS</strong> datasets <em>on demand</em> from the IRTS archive say: <code>delta-neutral-strategy-backtest.h5</code> </p>
+<p>This design balances long-term archival with real-time analytics, and ensures data remains accessible across languages and platforms without compromising write performance.</p>
+<h3 id="structure-of-the-rts-price-matrix"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.632.55v22.9H2.28V24H0V0h2.28v.55zm7.043 7.26v1.157h.033a3.3 3.3 0 0 1 1.117-1.024c.433-.245.936-.365 1.5-.365q.81.002 1.481.314c.448.208.785.582 1.02 1.108q.382-.562 1.034-.992.651-.43 1.546-.43.679 0 1.26.167c.388.11.716.286.993.53.276.245.489.559.646.951q.229.587.23 1.417v5.728h-2.349V11.52q0-.43-.032-.812a1.8 1.8 0 0 0-.18-.66 1.1 1.1 0 0 0-.438-.448q-.292-.165-.785-.166-.498 0-.803.189a1.4 1.4 0 0 0-.48.499 2 2 0 0 0-.231.696 5.6 5.6 0 0 0-.06.785v4.768h-2.35v-4.8q.002-.38-.018-.752a2.1 2.1 0 0 0-.143-.688 1.05 1.05 0 0 0-.415-.503c-.194-.125-.476-.19-.854-.19q-.168 0-.439.074c-.18.051-.36.143-.53.282a1.64 1.64 0 0 0-.439.595q-.18.39-.18 1.02v4.966H5.46V7.81zm15.693 15.64V.55H21.72V0H24v24h-2.28v-.55z"/></svg></span> Structure of the RTS Price Matrix</h3>
+<p><img alt="prices" src="../assets/matrix.png#float-left-30" />
+The prices matrix shown above has 4290 rows and 10 columns. Each row marks the end of a fixed-duration trading interval — typically aligned with the Close in an OHLC series — while each column corresponds to a different stock or instrument. Column-to-symbol mappings can be reverse-resolved using the accompanying instruments.txt index file. Most cells contain regular price values, but some could be marked as NaN, which stands for “Not a Number.”</p>
+<p>In numerical computing, <code>NaN</code> (short for <em>Not a Number</em>) is a special value used to represent missing or undefined data. This is especially common in financial time series — for example, when a stock hasn’t traded during a given interval, or its first quote hasn’t appeared yet. Instead of filling these gaps with zeros or placeholders, <code>NaN</code> makes the absence explicit. For highly liquid symbols like <code>NVDA</code>, <code>AMZN</code>, <code>SPY</code>, <code>GOOGL</code>, <code>AMD</code>, or <code>AAPL</code>, you're unlikely to see <code>NaN</code>s — these stocks trade continuously. But for thinly traded names, delisted symbols, or stale contract IDs still present in the dataset, <code>NaN</code> values will show up, indicating periods with no valid market data.</p>
+<p>In general, trades occur between the bid and ask prices. The <code>price</code> matrix reflects this relationship: when both bid and ask quotes are present, a <strong>mid-price</strong> is computed by the filtering mechanism and recorded as the representative price. However, these synthetic midpoints are <strong>not included</strong> in the trading statistics — this ensures that only actual executed trades contribute to volume or activity metrics, making it easier to filter out illiquid or infrequently traded instruments.</p>
+<h3 id="tickdata-stream"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 14.5s2 2.17 2 3.5a2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-1.33 2-3.5 2-3.5M5 18V9a2 2 0 0 1-2-2 2 2 0 0 1 2-2V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1h8a2 2 0 0 1 2 2v4a1 1 0 0 1 1 1 1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1 1 1 0 0 1 1-1V9h-6v9h1a2 2 0 0 1 2 2v2H2v-2a2 2 0 0 1 2-2z"/></svg></span> Tickdata stream</h3>
+<p><img alt="prices" src="../assets/tick-struct.png#float-right-30" />
+The <code>tick_t</code> structure represents the most granular level of market activity in the IEX2H5 system — capturing individual bid/ask quotes and trades as they happen. Each tick includes a high-precision <strong>timestamp</strong> (as recorded by the exchange), the <strong>price</strong>, <strong>size</strong>, and a compact <strong>contract ID</strong> that identifies the security. The final field, <code>flags</code>, is a bitfield union that efficiently encodes metadata about the event — indicating whether it’s a bid or ask quote, a trade, or a level removal from the order book.</p>
+<p>In practice, this tick data is stored as a vector of structs — conceptually similar to working with a large <code>std::vector&lt;tick_t&gt;</code> in C++. This vector is serialized using HDF5’s compound datatype support and stored in compressed blocks called <strong>chunks</strong>. This binary layout preserves the full fidelity of the market stream, making it suitable for <strong>market replay</strong>, <strong>order flow analysis</strong>, and <strong>fine-grained statistical modeling</strong>. With over 245 million ticks in the example below, <strong>efficient storage and compression</strong> become essential — and that's exactly what IEX2H5 delivers through its compact layout and <code>gzip</code> filtering.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>245503474-element Vector{@NamedTuple{time::UInt64, price::Float32, size::UInt32, contract_id::UInt16, flags::UInt16}}:
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a> (time = 0x185896be8c2b291c, price = 629.45996, size = 0x00000065, contract_id = 0x029d, flags = 0x0004)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> (time = 0x185896be8c2b291c, price = 629.39996, size = 0x00000064, contract_id = 0x029d, flags = 0x0001)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> (time = 0x185896be8c2c14b1, price = 206.76999, size = 0x00000078, contract_id = 0x01bf, flags = 0x0004)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> ⋮
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a> (time = 0x1858ac06c1e9485a, price = 38.45, size = 0x0000012c, contract_id = 0x0d86, flags = 0x0004)
+</span></code></pre></div>
+<h3 id="stats-intraday-trade-statistics"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 19.1c-.2 1.1-.6 1.9-1.3 2.4s-1.6.6-2.7.4c-.4-.1-1.2-.2-1.5-.4l.5-1.5c.3.1.9.3 1.2.3 1.1.2 1.7-.3 1.9-1.5L12 5.2c.2-1.2.7-2 1.4-2.6.7-.5 1.7-.7 2.8-.5.4.1 1.2.2 1.8.5L17.5 4c-.2-.1-.9-.2-1.2-.3-1.3-.2-2 .4-2.3 1.9z"/></svg></span> <code>/stats/</code> — Intraday Trade Statistics</h3>
+<p>Summarized metrics for each trading day, useful for sanity checks, feature extraction, or visualization.</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Description</th>
+<th>Motivation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event_count</code></td>
+<td>Total events seen on the wire</td>
+<td>Filter out slow lazy stocks: asks and bids are included</td>
+</tr>
+<tr>
+<td><code>first_trade</code></td>
+<td>Timestamp of first trade (per symbol)</td>
+<td>Filter out stocks by intra day time</td>
+</tr>
+<tr>
+<td><code>last_trade</code></td>
+<td>Timestamp of last trade (per symbol)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>trade_count</code></td>
+<td>Total trades (per symbol)</td>
+<td>Filter out intrequently traded stocks</td>
+</tr>
+<tr>
+<td><code>trade_size</code></td>
+<td>Average trade size</td>
+<td>Indicator for low or high traded volume</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compression"><span class="twemoji icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M160 64c0-17.7-14.3-32-32-32S96 46.3 96 64v64H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32v-96c0-17.7-14.3-32-32-32zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-64zm-32 256c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32s32-14.3 32-32v-64h64c17.7 0 32-14.3 32-32s-14.3-32-32-32z"/></svg></span> Compression</h2>
+<p>The <code>iex2h5</code> tool supports <strong>gzip compression levels</strong> from <code>--gzip 0</code> (no compression) to <code>--gzip 9</code> (maximum). Typical results:</p>
+<ul>
+<li><strong>IRTS datasets</strong> see a <strong>3–5× space reduction</strong></li>
+<li><strong>Compared to PCAP</strong>, total savings can reach <strong>6–10×</strong>, as irrelevant protocol data is stripped away</li>
+</ul>
+<p>This makes <strong>HDF5 a vastly more efficient archival format</strong> than raw <code>pcap.gz</code>, especially for long-term retention or transfer between systems. For teams with large-scale cloud storage needs, a commercial version is in development offering <strong>up to 100× compression</strong>. This unlocks:</p>
+<ul>
+<li>Dramatic savings on object storage costs (S3, GCS, Azure)</li>
+<li>Faster network sync and replication</li>
+</ul>
 <blockquote>
-<p><strong>We can’t build a perfect hash upfront, because we don’t know all the symbols ahead of time.</strong></p>
+<p><span class="twemoji pulsate"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3c5.5 0 10 3.58 10 8s-4.5 8-10 8c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.13 2 11c0-4.42 4.5-8 10-8m5 9v-2h-2v2zm-4 0v-2h-2v2zm-4 0v-2H7v2z"/></svg></span> Want early access? <a href="mailto:info@vargaconsulting.ca">Contact me</a> to discuss tailored storage pipelines for your use case.</p>
 </blockquote>
-<p>In IEX feeds, symbols are <strong>not disseminated before trading starts</strong> — the stream begins with activity (trades or quotes), and new symbols may appear at any time. This makes it impossible to construct a fixed mapping ahead of time without either:</p>
+<p>See also:</p>
 <ul>
-<li>a separate discovery phase (which delays startup), or</li>
-<li>backpatching (which breaks streaming assumptions)</li>
+<li><a href="../spec/IEX%20Transport%20Specification%20v125.pdf">IEX Transport Specification v125</a></li>
+<li><a href="../spec/IEX%20DEEP%20SNAP%20Specification%200.05.pdf">IEX DEEP SNAP Spec 0.05</a></li>
 </ul>
-<p>Flat maps let us build the mapping <strong>on the fly</strong>, adding symbols as they first appear, while preserving fast lookup and ordered access.</p>
 
 
 
