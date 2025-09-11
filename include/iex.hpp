@@ -392,7 +392,7 @@ namespace iex {
 		void transport_handler( const iex::transport::header* segment ){
 			using namespace std;
 			using namespace date;
-		
+			if(segment->time ==  (~0ULL)) return; // 0xffffffffffffffffULL denotes invalid packet see issue #93
 			if( !count ) today = date::floor<date::days>( time_point(duration( segment->time) ) );
 			auto now = time_point(duration( segment->time) );
 		
