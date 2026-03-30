@@ -14,8 +14,8 @@ Before diving in, make sure your setup can keep up — we’re not just crunchin
 * **OS**: :simple-linux: Linux with a recent kernel  
 * **Compilers**:  :material-language-cpp:{.icon} `g++` ≥ 13 or `clang++` ≥ 17 · :material-language-rust:{.icon} `rustc` ≥ 1.90  
 * **Core Tools**:  
-    * :octicons-cloud-24: [**iex-download**](https://github.com/vargaconsulting/iex-download)  
-    * :octicons-database-24: [**iex2h5**](https://github.com/vargaconsulting/iex2h5)  
+    * :octicons-cloud-24: [**iex-download**](https://github.com/vargalabs/iex-download)  
+    * :octicons-database-24: [**iex2h5**](https://github.com/vargalabs/iex2h5)  
 * **Statistical Environment** (choose one):  
     * :simple-julia:{.icon} Julia → HDF5, Statistics, GRUtils  
     * :simple-python:{.icon} Python → h5py, NumPy, Matplotlib  
@@ -81,7 +81,7 @@ Think of the **HDF5 IRTS streams** as a **read-only tick database**. They store 
 ```bash
 steven@saturn:~$ iex2h5 -o scratch/rts-from-pcap.h5 -c rts -g 0 /lake/iex/tops/TOPS-2025-09-0?.pcap.gz
 [iex2h5] Converting 6 files using backend: hdf5 — using 1 thread — © Varga Consulting, 2017–2025
-[iex2h5] Visit https://vargaconsulting.github.io/iex2h5/ — Star it, Share it, Support Open Tools ⭐️
+[iex2h5] Visit https://vargalabs.github.io/iex2h5/ — Star it, Share it, Support Open Tools ⭐️
 ▫ 2025-09-02 14:30:00 21:00:00 ✓
 ▫ 2025-09-03 14:30:00 21:00:00 ✓
 ▫ 2025-09-04 14:30:00 21:00:00 ✓
@@ -97,7 +97,7 @@ benchmark: 1849582050 events in 364090ms  5.1 Mticks/s, 0.196000 µs/tick la
 ```bash
 steven@saturn:~$ iex2h5 -o scratch/rts-from-hdf5.h5 -c rts -g 0 --date-range 2025-09-02:2025-09-09 /lake/iex/iex.h5 
 [iex2h5] Converting 1 file using backend: hdf5 — using 1 thread — © Varga Consulting, 2017–2025
-[iex2h5] Visit https://vargaconsulting.github.io/iex2h5/ — Star it, Share it, Support Open Tools ⭐️
+[iex2h5] Visit https://vargalabs.github.io/iex2h5/ — Star it, Share it, Support Open Tools ⭐️
 ▫ 2025-09-02 14:30:00 21:00:00 ✓
 ▫ 2025-09-03 14:30:00 21:00:00 ✓
 ▫ 2025-09-04 14:30:00 21:00:00 ✓
