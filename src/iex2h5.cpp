@@ -34,7 +34,7 @@ void signal_handler(int signal) {
 int main(int argc, char **argv) {
 	using std::cout, std::cerr, std::endl;
 	
-	std::string output_path_or_url, rts_path, instruments_path, trading_days_path, days, interval, time_range, date_range, convert, benchmark_format,
+	std::string output_path_or_url, rts_path, instruments_path, trading_days_path, days, interval, time_range, date_range, convert, benchmark_format, layout,
 		copyright = "Copyright © 2017–2025 Varga Consulting, Toronto, ON, Canada   info@vargaconsulting.ca",
 		iex_attribution = "\033[1m[iex2h5]\033[0m Market data © IEX — Investors Exchange. Attribution required. See https://iextrading.com";
 
@@ -61,10 +61,15 @@ int main(int argc, char **argv) {
 		cout << "     redis://<host>[:<port>][/<key-prefix>]" << endl;
 		cout << "                    Redis — tick events streamed as Redis XADD entries" << endl;
 		cout << endl;
+		cout << "\033[1m" "HDF5 tick layouts  (--layout, HDF5 backend only):" "\033[0m" << endl;
+		cout << "     compound       interleaved struct per tick, packet-table append (default, backward compatible)" << endl;
+		cout << "     columnar       per-instrument column arrays + offset table, parquet-style (experimental, issue #97)" << endl;
+		cout << endl;
 		cout << "\033[1m" "Examples:" "\033[0m" <<endl;
 		cout << "   " << argv[0] << " -o ~/iex.h5 -c irts ~/data/202{4,5}-{04,05}-??.pcap.gz # HDF5: gzipped PCAP → IRTS (brace expansion and globs supported)" << std::endl;
 		cout << "   " << argv[0] << " -o rts.h5  --time-interval 00:00:10 -c rts iex.h5      # HDF5: IRTS → RTS matrices at 10-second intervals" << endl;
-		cout << "   " << argv[0] << " -o ~/iex.h5 -c irts ~/data/**/*.pcap                   # HDF5: plain PCAP → IRTS tick data" << endl;
+		cout << "   " << argv[0] << " -o ~/iex.h5 -c irts ~/data/**/*.pcap                   # HDF5: plain PCAP → IRTS tick data (compound layout)" << endl;
+		cout << "   " << argv[0] << " -o ~/iex.h5 --layout columnar -c irts ~/data/**/*.pcap  # HDF5: plain PCAP → IRTS tick data (columnar layout)" << endl;
 		cout << "   " << argv[0] << " -o ~/out.csv -c irts ~/data/**/*.pcap                  # CSV:  plain PCAP → IRTS, one .csv file per day" << endl;
 		cout << "   " << argv[0] << " -o ~/out.json -c irts ~/data/**/*.pcap                 # JSON: plain PCAP → IRTS, one .json file per day" << endl;
 		cout << "   " << argv[0] << " -o redis://localhost:6379/iex -c irts ~/data/**/*.pcap  # Redis: stream ticks via XADD to redis://localhost" << endl;
@@ -105,6 +110,11 @@ int main(int argc, char **argv) {
 	program.add_argument("-g", "--gzip").default_value(static_cast<unsigned>(1)).scan<'u', unsigned>().help("Compression level (0 = none, 9 = maximum)");
 	
 	program.add_argument("-c", "--convert").default_value(std::string("all")).choices("rts", "irts", "all", "none").help("Which conversion pipeline to run: rts | irts | none | all");
+
+	program.add_argument("--layout").default_value(std::string("compound")).choices("compound", "columnar")
+		.help("HDF5 tick storage layout (ignored for non-HDF5 backends):\n"
+			"                           compound  — interleaved struct per tick, packet-table append (default)\n"
+			"                           columnar  — per-instrument column arrays + offset table, parquet-style");
 
 	program.add_argument("remaining").remaining();
 	program.add_argument("--third-party-licenses").nargs('*').default_value(std::vector<std::string>{"all"}).implicit_value("all")
@@ -153,21 +163,27 @@ int main(int argc, char **argv) {
 	
 	h5::mute();
     try {
-		std::tie(interval, time_range, date_range, output_path_or_url, rts_path, instruments_path, trading_days_path, compression_level, convert, benchmark_format) = std::make_tuple(
+		std::tie(interval, time_range, date_range, output_path_or_url, rts_path, instruments_path, trading_days_path, compression_level, convert, benchmark_format, layout) = std::make_tuple(
 			program.get<std::string>("--time-interval"), program.get<std::string>("--time-range"), program.get<std::string>("--date-range"),
 			program.get<std::string>("--output"),
 			program.get<std::string>("--rts-path"), program.get<std::string>("--instruments-path"), program.get<std::string>("trading-days-path"),
-			program.get<unsigned>("--gzip"), program.get<std::string>("--convert"), program.get<std::string>("--benchmark-format"));
+			program.get<unsigned>("--gzip"), program.get<std::string>("--convert"), program.get<std::string>("--benchmark-format"),
+			program.get<std::string>("--layout"));
 
 		bool is_irts_enabled = (convert == "all" || convert =="irts"),
 			is_rts_enabled = (convert == "all" || convert =="rts");
 		std::string dispatch = file::detect_format(output_path_or_url);
+
+		if (layout != "compound" && dispatch != "hdf5")
+			cerr << "\033[1m[iex2h5]\033[0m warning: --layout=" << layout << " has no effect for backend '" << dispatch << "' (HDF5 only)\n";
+		if (dispatch == "hdf5" && layout == "columnar")
+			dispatch = "hdf5:columnar";
 		std::vector<std::string> files = utils::resolve_input_paths(program.get<std::vector<std::string>>("remaining"));
 		
 		if(files.size()) {
 			cout << "\033[1m[iex2h5]\033[0m Converting " << files.size()
 			<< " file" << (files.size() > 1 ? "s" : "") 
-			<< " using backend: " << dispatch << " — using 1 thread — © Varga Consulting, 2017–2025\n"
+			<< " using backend: " << dispatch << " layout: " << layout << " — using 1 thread — © Varga Consulting, 2017–2025\n"
 			<< "\033[1m[iex2h5]\033[0m Visit \033[4mhttps://vargaconsulting.github.io/iex2h5/\033[0m — Star it, Share it, Support Open Tools ⭐️\n";
 			std::pair<std::string,std::string> time = utils::parse::time_interval(time_range),
 				date = utils::parse::date_interval(date_range);
@@ -177,6 +193,9 @@ int main(int argc, char **argv) {
 
 			std::map<std::string, std::function<void()>> execute {
 				{"hdf5", io::create<io::hdf5::consumer_t>(files, date, time, interval, output_path_or_url, rts_path, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled, compression_level)},
+				{"hdf5:columnar", [](){
+					throw std::runtime_error("[iex2h5] columnar HDF5 layout is not yet implemented (issue #97)");
+				}},
 				{"csv", io::create<io::csv::consumer_t>(files, date, time, interval, output_path_or_url, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled)},				
 				{"json", io::create<io::json::consumer_t>(files, date, time, interval, output_path_or_url, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled)},			
 				{"redis", io::create<io::redis::consumer_t>(files, date, time, interval, output_path_or_url, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled)}
