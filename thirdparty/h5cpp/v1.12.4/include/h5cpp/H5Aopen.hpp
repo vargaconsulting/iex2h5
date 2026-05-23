@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) 2018-2020 Steven Varga, Toronto,ON Canada
+ * Author: Varga, Steven <steven@vargaconsulting.ca>
+ */
+#pragma once
+#include "H5Acreate.hpp"
+#include <string>
+#include <type_traits>
+namespace h5 {
+	template<class HID_T>
+	inline std::enable_if_t<h5::impl::is_valid_attr<HID_T>::value,
+    h5::at_t> open(const  HID_T& parent, const std::string& path, const h5::acpl_t& acpl = h5::default_acpl ){
+
+		H5CPP_CHECK_PROP( acpl, h5::error::io::attribute::open, "invalid attribute creation property" );
+		hid_t attr = H5I_UNINIT;
+	   	H5CPP_CHECK_NZ(( attr = H5Aopen( static_cast<hid_t>(parent),
+			path.c_str(), static_cast<hid_t>(acpl))), h5::error::io::attribute::open, "can't open attribute..." );
+     	return  h5::at_t{attr};
+    }
+}
