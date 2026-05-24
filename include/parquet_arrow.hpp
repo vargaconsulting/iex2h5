@@ -223,6 +223,15 @@ private:
 		arrow::BooleanBuilder is_ask_builder(pool);
 		arrow::BooleanBuilder remove_level_builder(pool);
 
+		detail::check(symbol_builder.Reserve(buffered_ticks));
+		detail::check(time_builder.Reserve(buffered_ticks));
+		detail::check(price_builder.Reserve(buffered_ticks));
+		detail::check(size_builder.Reserve(buffered_ticks));
+		detail::check(is_bid_builder.Reserve(buffered_ticks));
+		detail::check(is_trade_builder.Reserve(buffered_ticks));
+		detail::check(is_ask_builder.Reserve(buffered_ticks));
+		detail::check(remove_level_builder.Reserve(buffered_ticks));
+
 		for (contract_t id = 0; id < static_cast<contract_t>(id_to_symbol.size()); ++id) {
 			auto it = per_symbol.find(id);
 			if (it == per_symbol.end()) continue;
