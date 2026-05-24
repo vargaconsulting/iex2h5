@@ -43,6 +43,8 @@ namespace io::kdb {
             K r = k(handle, "system \"mkdir -p ./iex2h5_db\"", (K)0);
             if (r) r0(r);
 
+            db_size_before = query_dir_size();
+
             r = k(handle, "if[`ticks in key `.; delete ticks from `.]; ticks:([] time:`long$();sym:`symbol$();price:`float$();size:`int$();side:`char$())", (K)0);
             if (!r) {
                 kclose(handle);
@@ -116,7 +118,24 @@ namespace io::kdb {
         }
 
         void on_session_end() {
-            INFO << "Session ended. kdb+ data in ./iex2h5_db/" << std::endl;
+            flush();
+            if (!today.empty()) {
+                std::string kdb_date = today;
+                std::replace(kdb_date.begin(), kdb_date.end(), '-', '.');
+                std::string q = "if[count ticks; `:./iex2h5_db/" + kdb_date + "/ticks/ set .Q.en[`:./iex2h5_db; ticks]; delete ticks from `. ]";
+                K r = k(handle, (S)q.c_str(), (K)0);
+                if (!r) {
+                    ERROR << "kdb+ final splay failed (network)" << std::endl;
+                } else if (r->t == -128) {
+                    ERROR << "kdb+ final splay error: " << r->s << std::endl;
+                    r0(r);
+                } else {
+                    r0(r);
+                }
+            }
+            uint64_t db_size_after = query_dir_size();
+            global::state::total_output_after = (db_size_after > db_size_before) ? (db_size_after - db_size_before) : 0;
+            INFO << "Session ended. kdb+ delta: " << utils::human_readable(global::state::total_output_after) << std::endl;
         }
 
     private:
@@ -172,8 +191,27 @@ namespace io::kdb {
             return sym_cache[id].c_str();
         }
 
+        uint64_t query_dir_size() {
+            K r = k(handle, "system \"du -sb ./iex2h5_db 2>/dev/null | cut -f1\"", (K)0);
+            uint64_t size = 0;
+            if (r) {
+                if (r->t == 0 && r->n > 0) {
+                    K first = kK(r)[0];
+                    if (first && first->t == KC) {
+                        try {
+                            std::string s((char*)kG(first), static_cast<size_t>(first->n));
+                            size = std::stoull(s);
+                        } catch (...) {}
+                    }
+                }
+                r0(r);
+            }
+            return size;
+        }
+
         int handle = -1;
         std::string today;
+        uint64_t db_size_before = 0;
         std::vector<J> time_buf;
         std::vector<std::string> sym_buf;
         std::vector<F> price_buf;

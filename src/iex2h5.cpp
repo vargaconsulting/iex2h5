@@ -180,7 +180,8 @@ int main(int argc, char **argv) {
 			else try {
 				using gs = global::state;
 				execute[dispatch]();
-				gs::total_output_after = utils::path_size(output_path_or_url);
+				if (dispatch != "kdb")
+					gs::total_output_after = utils::path_size(output_path_or_url);
 				uint64_t total_output_difference = gs::total_output_after - gs::total_output_before;
 				std::string benchmark_line = benchmark_format != "csv" ?
 					fmt::format("benchmark: {} events in {}ms  {:.1f} Mticks/s, {:.6f} µs/tick latency, {} input converted into {} output",
