@@ -182,6 +182,7 @@ int main(int argc, char **argv) {
 				execute[dispatch]();
 				gs::total_output_after = utils::path_size(output_path_or_url);
 				uint64_t total_output_difference = gs::total_output_after - gs::total_output_before;
+
 				std::string benchmark_line = benchmark_format != "csv" ?
 					fmt::format("benchmark: {} events in {}ms  {:.1f} Mticks/s, {:.6f} µs/tick latency, {} input converted into {} output",
 						gs::event_count, gs::duration, gs::event_rate / 1e6, gs::event_latency / 1e3, utils::human_readable(gs::total_input), utils::human_readable(total_output_difference)) 
