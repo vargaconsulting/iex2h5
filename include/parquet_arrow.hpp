@@ -191,6 +191,8 @@ private:
 				id_to_symbol[idx] = utils::trim(symbol);
 		}
 
+		std::cerr << " [flush " << buffered_ticks << " rows]" << std::flush;
+
 		// Sort each instrument's buffer by time
 		for (auto& [id, buf] : per_symbol) {
 			std::vector<size_t> order(buf.time.size());
@@ -233,6 +235,7 @@ private:
 		detail::check(remove_level_builder.Reserve(buffered_ticks));
 
 		for (contract_t id = 0; id < static_cast<contract_t>(id_to_symbol.size()); ++id) {
+			if (id % 100 == 0) std::cerr << '.' << std::flush;
 			auto it = per_symbol.find(id);
 			if (it == per_symbol.end()) continue;
 
@@ -268,6 +271,7 @@ private:
 		});
 
 		detail::check(arrow_writer->WriteRecordBatch(*batch));
+		std::cerr << " done" << std::endl;
 
 		per_symbol.clear();
 		buffered_ticks = 0;
