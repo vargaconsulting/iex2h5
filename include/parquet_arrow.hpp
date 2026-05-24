@@ -246,42 +246,7 @@ private:
 			for (auto& t : threads) t.join();
 		}
 
-		// Build flat column vectors for bulk Arrow loading
-		std::vector<std::string> symbols;
-		std::vector<int64_t>    times;
-		std::vector<float>      prices;
-		std::vector<uint32_t>   sizes;
-		std::vector<uint8_t>    is_bids;
-		std::vector<uint8_t>    is_trades;
-		std::vector<uint8_t>    is_asks;
-		std::vector<uint8_t>    remove_levels;
-
-		symbols.reserve(buffered_ticks);
-		times.reserve(buffered_ticks);
-		prices.reserve(buffered_ticks);
-		sizes.reserve(buffered_ticks);
-		is_bids.reserve(buffered_ticks);
-		is_trades.reserve(buffered_ticks);
-		is_asks.reserve(buffered_ticks);
-		remove_levels.reserve(buffered_ticks);
-
-		for (contract_t id : active_ids) {
-			const auto& buf = per_symbol[id];
-			const std::string& sym = id_to_symbol[id];
-			for (size_t i = 0; i < buf.time.size(); ++i) {
-				symbols.push_back(sym);
-				times.push_back(static_cast<int64_t>(buf.time[i]));
-				prices.push_back(buf.price[i]);
-				sizes.push_back(buf.size[i]);
-				uint16_t f = buf.flags[i];
-				is_bids.push_back((f & (1 << 0)) != 0);
-				is_trades.push_back((f & (1 << 1)) != 0);
-				is_asks.push_back((f & (1 << 2)) != 0);
-				remove_levels.push_back((f & (1 << 3)) != 0);
-			}
-		}
-
-		// Bulk-load into Arrow builders
+		// Build Arrow arrays in symbol order
 		arrow::MemoryPool* pool = arrow::default_memory_pool();
 		arrow::StringBuilder symbol_builder(pool);
 		arrow::TimestampBuilder time_builder(arrow::timestamp(arrow::TimeUnit::NANO), pool);
@@ -292,14 +257,32 @@ private:
 		arrow::BooleanBuilder is_ask_builder(pool);
 		arrow::BooleanBuilder remove_level_builder(pool);
 
-		detail::check(symbol_builder.AppendValues(symbols));
-		detail::check(time_builder.AppendValues(times.data(), static_cast<int64_t>(times.size())));
-		detail::check(price_builder.AppendValues(prices.data(), static_cast<int64_t>(prices.size())));
-		detail::check(size_builder.AppendValues(sizes.data(), static_cast<int64_t>(sizes.size())));
-		detail::check(is_bid_builder.AppendValues(is_bids.data(), static_cast<int64_t>(is_bids.size())));
-		detail::check(is_trade_builder.AppendValues(is_trades.data(), static_cast<int64_t>(is_trades.size())));
-		detail::check(is_ask_builder.AppendValues(is_asks.data(), static_cast<int64_t>(is_asks.size())));
-		detail::check(remove_level_builder.AppendValues(remove_levels.data(), static_cast<int64_t>(remove_levels.size())));
+		detail::check(symbol_builder.Reserve(buffered_ticks));
+		detail::check(time_builder.Reserve(buffered_ticks));
+		detail::check(price_builder.Reserve(buffered_ticks));
+		detail::check(size_builder.Reserve(buffered_ticks));
+		detail::check(is_bid_builder.Reserve(buffered_ticks));
+		detail::check(is_trade_builder.Reserve(buffered_ticks));
+		detail::check(is_ask_builder.Reserve(buffered_ticks));
+		detail::check(remove_level_builder.Reserve(buffered_ticks));
+
+		for (contract_t id : active_ids) {
+			auto it = per_symbol.find(id);
+			if (it == per_symbol.end()) continue;
+			const auto& buf = it->second;
+			const std::string& sym = id_to_symbol[id];
+			for (size_t i = 0; i < buf.time.size(); ++i) {
+				detail::check(symbol_builder.Append(sym));
+				detail::check(time_builder.Append(static_cast<int64_t>(buf.time[i])));
+				detail::check(price_builder.Append(buf.price[i]));
+				detail::check(size_builder.Append(buf.size[i]));
+				uint16_t f = buf.flags[i];
+				detail::check(is_bid_builder.Append((f & (1 << 0)) != 0));
+				detail::check(is_trade_builder.Append((f & (1 << 1)) != 0));
+				detail::check(is_ask_builder.Append((f & (1 << 2)) != 0));
+				detail::check(remove_level_builder.Append((f & (1 << 3)) != 0));
+			}
+		}
 
 		std::shared_ptr<arrow::Array> symbol_arr, time_arr, price_arr, size_arr;
 		std::shared_ptr<arrow::Array> is_bid_arr, is_trade_arr, is_ask_arr, remove_level_arr;
