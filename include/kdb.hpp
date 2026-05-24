@@ -43,7 +43,7 @@ namespace io::kdb {
             K r = k(handle, "system \"mkdir -p ./iex2h5_db\"", (K)0);
             if (r) r0(r);
 
-            r = k(handle, "if[not `ticks in key `.; ticks:([] time:`timestamp$();sym:`symbol$();price:`float$();size:`int$();side:`char$())]", (K)0);
+            r = k(handle, "if[`ticks in key `.; delete ticks from `.]; ticks:([] time:`long$();sym:`symbol$();price:`float$();size:`int$();side:`char$())", (K)0);
             if (!r) {
                 kclose(handle);
                 THROW_RUNTIME_ERROR("kdb+ table init failed");
@@ -63,7 +63,7 @@ namespace io::kdb {
             auto start_time = floor<seconds>(day);
             today = date::format("%F", floor<days>(day));
 
-            K r = k(handle, "if[not `ticks in key `.; ticks:([] time:`timestamp$();sym:`symbol$();price:`float$();size:`int$();side:`char$())]", (K)0);
+            K r = k(handle, "if[`ticks in key `.; delete ticks from `.]; ticks:([] time:`long$();sym:`symbol$();price:`float$();size:`int$();side:`char$())", (K)0);
             if (r) r0(r);
 
             status = iex::compat::format("▫ {}", start_time);
@@ -139,7 +139,7 @@ namespace io::kdb {
             }
 
             K data = knk(5, t, s, p, z, d);
-            K r = k(handle, "insert", ks((S)"ticks"), data, (K)0);
+            K r = k(handle, "`ticks insert", data, (K)0);
 
             if (!r) {
                 ERROR << "kdb+ network error during flush" << std::endl;
@@ -149,7 +149,7 @@ namespace io::kdb {
             } else {
                 r0(r);
             }
-            r0(data);
+            // k() consumes arguments; do not r0(data)
 
             global::state::event_count += static_cast<uint64_t>(n);
 
