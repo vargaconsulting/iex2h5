@@ -200,11 +200,11 @@ namespace utils {
         for (const auto& filename : raw_inputs) {
             if (filename == "-" || fs::is_regular_file(filename))
                 files.emplace_back(filename);
-            else if (fs::is_directory(filename))
-                for (const auto& entry : fs::directory_iterator(filename)) 
+            else if (fs::is_directory(filename)) {
+                for (const auto& entry : fs::directory_iterator(filename))
                     if (fs::is_regular_file(entry))
                         files.emplace_back(entry.path().string());
-            else if (filename.find("**") != std::string::npos)  {
+            } else if (filename.find("**") != std::string::npos)  {
                 auto matches = expand_glob_recursive(filename);
                 files.insert(files.end(), matches.begin(), matches.end());
             } else if (filename.find('*') != std::string::npos || filename.find('?') != std::string::npos) {
@@ -226,10 +226,13 @@ namespace utils {
     }
 
     inline std::uintmax_t path_size(std::string const& pattern) {
+        namespace fs = std::filesystem;
+        if (fs::is_directory(pattern))
+            return path_size(fs::path{pattern});
         auto files = resolve_input_paths(std::vector<std::string>{pattern});
-        std::uintmax_t total = 0; 
-        for (auto const& fp : files) 
-            total += path_size(std::filesystem::path{fp});
+        std::uintmax_t total = 0;
+        for (auto const& fp : files)
+            total += path_size(fs::path{fp});
         return total;
     }
 
