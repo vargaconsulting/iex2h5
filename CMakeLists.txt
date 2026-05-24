@@ -27,6 +27,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 option(USE_GOOGLE_PROFILER "Enable Google CPU profiler if found" OFF)
+option(IEX2H5_BUILD_PARQUET "Enable Apache Parquet output support (requires Arrow)" OFF)
 
 # automated versioning
 execute_process( COMMAND git rev-parse --short HEAD WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE GIT_COMMIT_HASH OUTPUT_STRIP_TRAILING_WHITESPACE )
@@ -78,6 +79,14 @@ if(USE_GOOGLE_PROFILER AND GoogleProfiler_FOUND)
   message(STATUS "Google Profiler enabled")
   list(APPEND LIBS ${GOOGLE_PROFILER_LIBRARY})
   add_definitions(-DHAVE_GOOGLE_PROFILER)
+endif()
+
+if(IEX2H5_BUILD_PARQUET)
+  find_package(Arrow REQUIRED)
+  find_package(Parquet REQUIRED)
+  message(STATUS "Apache Parquet support enabled")
+  list(APPEND LIBS Arrow::arrow_shared Parquet::parquet_shared)
+  add_definitions(-DIEX2H5_HAVE_PARQUET)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
