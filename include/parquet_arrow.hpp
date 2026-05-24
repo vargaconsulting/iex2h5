@@ -45,7 +45,7 @@ struct consumer_t : public io::base::consumer_t<consumer_t> {
 	using typename base::clock, base::duration, base::time_point, base::contract_t;
 	using base::I, base::T, base::contracts, base::rts, base::CONTRACT_ID_MASK, base::flatmap;
 
-	static constexpr size_t ROW_GROUP_FLUSH_THRESHOLD = 5'000'000;
+	static constexpr size_t ROW_GROUP_FLUSH_THRESHOLD = 50'000'000;
 
 	consumer_t(std::string dir, std::string asset_path, std::string tradingdays_path,
 		bool is_irts_enabled, bool is_rts_enabled)
