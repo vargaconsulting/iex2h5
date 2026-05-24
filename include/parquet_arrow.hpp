@@ -73,6 +73,7 @@ struct consumer_t : public io::base::consumer_t<consumer_t> {
 
 			parquet::WriterProperties::Builder props_builder;
 			props_builder.compression(parquet::Compression::ZSTD);
+			props_builder.encoding("time", parquet::Encoding::DELTA_BINARY_PACKED);
 			props_builder.enable_write_page_index();
 			auto props = props_builder.build();
 
