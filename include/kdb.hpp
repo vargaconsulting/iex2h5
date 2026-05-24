@@ -40,7 +40,7 @@ namespace io::kdb {
             if (handle < 0)
                 THROW_RUNTIME_ERROR("kdb+ connection failed: " + host + ":" + std::to_string(port));
 
-            K r = k(handle, "system \"mkdir -p ./iex2h5_db\"", (K)0);
+            K r = k(handle, "system \"rm -rf ./iex2h5_db && mkdir -p ./iex2h5_db\"", (K)0);
             if (r) r0(r);
 
             db_size_before = query_dir_size();
