@@ -509,6 +509,7 @@ namespace file {
         if (ext == ".json") return "json";
     
         if (path.starts_with("redis://")) return "redis";
+        if (path.starts_with("kdb://")) return "kdb";
         if (path.starts_with("mysql://")) return "mysql";
     
         throw std::runtime_error("Unable to detect format: " + path);
