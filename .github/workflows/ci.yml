@@ -149,6 +149,33 @@ jobs:
         name: status-${{ matrix.os }}-${{ matrix.compiler }}
         path: badge-status/status-${{ matrix.os }}-${{ matrix.compiler }}.json
 
+  build-parquet:
+    name: ubuntu-24.04 / parquet (optional Arrow)
+    runs-on: ubuntu-24.04
+    needs: build
+    if: always()
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Arrow APT source
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ca-certificates lsb-release wget
+        wget https://apache.jfrog.io/artifactory/arrow/ubuntu/apache-arrow-apt-source-latest-$(lsb_release --codename --short).deb
+        sudo apt-get install -y ./apache-arrow-apt-source-latest-$(lsb_release --codename --short).deb
+        sudo apt-get update
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get install -y libhdf5-dev libarrow-dev libparquet-dev
+
+    - name: Configure with Parquet
+      run: cmake -B build -DCMAKE_CXX_STANDARD=23 -DCMAKE_BUILD_TYPE=Release -DIEX2H5_BUILD_PARQUET=ON
+
+    - name: Build with Parquet
+      run: cmake --build build --parallel
+
   generate-badges:
     name: Generate SVG Badges
     runs-on: ubuntu-latest

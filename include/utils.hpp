@@ -507,6 +507,7 @@ namespace file {
         if (ext == ".csv") return "csv";
         if (ext == ".tsv") return "tsv";
         if (ext == ".json") return "json";
+        if (ext == ".parquet") return "parquet";
     
         if (path.starts_with("redis://")) return "redis";
         if (path.starts_with("mysql://")) return "mysql";

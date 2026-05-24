@@ -22,6 +22,9 @@
 #include <licenses.hpp>
 #include <global_state.hpp>
 #include <json.hpp>
+#ifdef IEX2H5_HAVE_PARQUET
+#include <parquet_arrow.hpp>
+#endif
 
 #ifndef IEX_MAX_SYMBOLS
 	#define IEX_MAX_SYMBOLS 1 << 16
@@ -166,6 +169,9 @@ int main(int argc, char **argv) {
 				{"csv", io::create<io::csv::consumer_t>(files, date, time, interval, output_path_or_url, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled)},				
 				{"json", io::create<io::json::consumer_t>(files, date, time, interval, output_path_or_url, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled)},			
 				{"redis", io::create<io::redis::consumer_t>(files, date, time, interval, output_path_or_url, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled)}
+#ifdef IEX2H5_HAVE_PARQUET
+				,{"parquet", io::create<io::parquet_arrow::consumer_t>(files, date, time, interval, output_path_or_url, instruments_path, trading_days_path, is_irts_enabled, is_rts_enabled)}
+#endif
 			};
 
 
