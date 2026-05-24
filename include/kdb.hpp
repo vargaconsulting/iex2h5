@@ -43,6 +43,9 @@ namespace io::kdb {
             K r = k(handle, "system \"rm -rf ./iex2h5_db && mkdir -p ./iex2h5_db\"", (K)0);
             if (r) r0(r);
 
+            r = k(handle, ".z.zd:(17;5;1)", (K)0);
+            if (r) r0(r);
+
             db_size_before = query_dir_size();
 
             r = k(handle, "if[`ticks in key `.; delete ticks from `.]; ticks:([] time:`long$();sym:`symbol$();price:`float$();size:`int$();side:`char$())", (K)0);
