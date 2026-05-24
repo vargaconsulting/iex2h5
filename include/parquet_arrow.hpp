@@ -11,6 +11,7 @@
 #include <parquet/arrow/writer.h>
 #include <filesystem>
 #include <numeric>
+#include <thread>
 #include <unordered_map>
 
 namespace io::parquet_arrow {
@@ -36,6 +37,7 @@ struct tick_buffer_t {
 	std::vector<float>    price;
 	std::vector<uint32_t> size;
 	std::vector<uint16_t> flags;
+	bool sorted = true;
 };
 
 struct consumer_t : public io::base::consumer_t<consumer_t> {
@@ -104,7 +106,10 @@ struct consumer_t : public io::base::consumer_t<consumer_t> {
 
 	void append(time_point now, contract_t contract, float price, uint32_t size, uint16_t flags) {
 		auto& buf = per_symbol[contract];
-		buf.time.push_back(utils::to_ns(now));
+		uint64_t now_ns = utils::to_ns(now);
+		if (!buf.time.empty() && buf.time.back() > now_ns)
+			buf.sorted = false;
+		buf.time.push_back(now_ns);
 		buf.price.push_back(price);
 		buf.size.push_back(size);
 		buf.flags.push_back(flags);
@@ -194,28 +199,89 @@ private:
 
 		std::cerr << " [flush " << buffered_ticks << " rows]" << std::flush;
 
-		// Sort each instrument's buffer by time
-		for (auto& [id, buf] : per_symbol) {
-			std::vector<size_t> order(buf.time.size());
-			std::iota(order.begin(), order.end(), 0);
-			std::stable_sort(order.begin(), order.end(),
-				[&](size_t a, size_t b) { return buf.time[a] < buf.time[b]; });
+		// Collect active symbol IDs for deterministic ordering
+		std::vector<contract_t> active_ids;
+		active_ids.reserve(per_symbol.size());
+		for (const auto& [id, buf] : per_symbol)
+			active_ids.push_back(id);
+		std::sort(active_ids.begin(), active_ids.end());
 
-			tick_buffer_t sorted;
-			sorted.time.reserve(buf.time.size());
-			sorted.price.reserve(buf.price.size());
-			sorted.size.reserve(buf.size.size());
-			sorted.flags.reserve(buf.flags.size());
-			for (size_t i : order) {
-				sorted.time.push_back(buf.time[i]);
-				sorted.price.push_back(buf.price[i]);
-				sorted.size.push_back(buf.size[i]);
-				sorted.flags.push_back(buf.flags[i]);
+		// Parallel sort — only symbols whose buffers are out of order
+		unsigned num_threads = std::thread::hardware_concurrency();
+		if (num_threads == 0) num_threads = 4;
+		if (active_ids.size() < num_threads * 4) num_threads = 1;
+
+		{
+			std::vector<std::thread> threads;
+			size_t chunk = (active_ids.size() + num_threads - 1) / num_threads;
+			for (unsigned t = 0; t < num_threads; ++t) {
+				size_t start = t * chunk;
+				size_t end = std::min(start + chunk, active_ids.size());
+				if (start >= end) continue;
+				threads.emplace_back([this, &active_ids, start, end]() {
+					for (size_t i = start; i < end; ++i) {
+						contract_t id = active_ids[i];
+						auto& buf = per_symbol[id];
+						if (buf.sorted) continue;
+						std::vector<size_t> order(buf.time.size());
+						std::iota(order.begin(), order.end(), 0);
+						std::stable_sort(order.begin(), order.end(),
+							[&](size_t a, size_t b) { return buf.time[a] < buf.time[b]; });
+						tick_buffer_t new_buf;
+						new_buf.time.reserve(buf.time.size());
+						new_buf.price.reserve(buf.price.size());
+						new_buf.size.reserve(buf.size.size());
+						new_buf.flags.reserve(buf.flags.size());
+						for (size_t j : order) {
+							new_buf.time.push_back(buf.time[j]);
+							new_buf.price.push_back(buf.price[j]);
+							new_buf.size.push_back(buf.size[j]);
+							new_buf.flags.push_back(buf.flags[j]);
+						}
+						new_buf.sorted = true;
+						buf = std::move(new_buf);
+					}
+				});
 			}
-			buf = std::move(sorted);
+			for (auto& t : threads) t.join();
 		}
 
-		// Build Arrow arrays in symbol order
+		// Build flat column vectors for bulk Arrow loading
+		std::vector<std::string> symbols;
+		std::vector<int64_t>    times;
+		std::vector<float>      prices;
+		std::vector<uint32_t>   sizes;
+		std::vector<uint8_t>    is_bids;
+		std::vector<uint8_t>    is_trades;
+		std::vector<uint8_t>    is_asks;
+		std::vector<uint8_t>    remove_levels;
+
+		symbols.reserve(buffered_ticks);
+		times.reserve(buffered_ticks);
+		prices.reserve(buffered_ticks);
+		sizes.reserve(buffered_ticks);
+		is_bids.reserve(buffered_ticks);
+		is_trades.reserve(buffered_ticks);
+		is_asks.reserve(buffered_ticks);
+		remove_levels.reserve(buffered_ticks);
+
+		for (contract_t id : active_ids) {
+			const auto& buf = per_symbol[id];
+			const std::string& sym = id_to_symbol[id];
+			for (size_t i = 0; i < buf.time.size(); ++i) {
+				symbols.push_back(sym);
+				times.push_back(static_cast<int64_t>(buf.time[i]));
+				prices.push_back(buf.price[i]);
+				sizes.push_back(buf.size[i]);
+				uint16_t f = buf.flags[i];
+				is_bids.push_back((f & (1 << 0)) != 0);
+				is_trades.push_back((f & (1 << 1)) != 0);
+				is_asks.push_back((f & (1 << 2)) != 0);
+				remove_levels.push_back((f & (1 << 3)) != 0);
+			}
+		}
+
+		// Bulk-load into Arrow builders
 		arrow::MemoryPool* pool = arrow::default_memory_pool();
 		arrow::StringBuilder symbol_builder(pool);
 		arrow::TimestampBuilder time_builder(arrow::timestamp(arrow::TimeUnit::NANO), pool);
@@ -226,34 +292,14 @@ private:
 		arrow::BooleanBuilder is_ask_builder(pool);
 		arrow::BooleanBuilder remove_level_builder(pool);
 
-		detail::check(symbol_builder.Reserve(buffered_ticks));
-		detail::check(time_builder.Reserve(buffered_ticks));
-		detail::check(price_builder.Reserve(buffered_ticks));
-		detail::check(size_builder.Reserve(buffered_ticks));
-		detail::check(is_bid_builder.Reserve(buffered_ticks));
-		detail::check(is_trade_builder.Reserve(buffered_ticks));
-		detail::check(is_ask_builder.Reserve(buffered_ticks));
-		detail::check(remove_level_builder.Reserve(buffered_ticks));
-
-		for (contract_t id = 0; id < static_cast<contract_t>(id_to_symbol.size()); ++id) {
-			if (id % 100 == 0) std::cerr << '.' << std::flush;
-			auto it = per_symbol.find(id);
-			if (it == per_symbol.end()) continue;
-
-			const auto& buf = it->second;
-			const std::string& sym = id_to_symbol[id];
-			for (size_t i = 0; i < buf.time.size(); ++i) {
-				detail::check(symbol_builder.Append(sym));
-				detail::check(time_builder.Append(static_cast<int64_t>(buf.time[i])));
-				detail::check(price_builder.Append(buf.price[i]));
-				detail::check(size_builder.Append(buf.size[i]));
-				uint16_t f = buf.flags[i];
-				detail::check(is_bid_builder.Append((f & (1 << 0)) != 0));
-				detail::check(is_trade_builder.Append((f & (1 << 1)) != 0));
-				detail::check(is_ask_builder.Append((f & (1 << 2)) != 0));
-				detail::check(remove_level_builder.Append((f & (1 << 3)) != 0));
-			}
-		}
+		detail::check(symbol_builder.AppendValues(symbols));
+		detail::check(time_builder.AppendValues(times.data(), static_cast<int64_t>(times.size())));
+		detail::check(price_builder.AppendValues(prices.data(), static_cast<int64_t>(prices.size())));
+		detail::check(size_builder.AppendValues(sizes.data(), static_cast<int64_t>(sizes.size())));
+		detail::check(is_bid_builder.AppendValues(is_bids.data(), static_cast<int64_t>(is_bids.size())));
+		detail::check(is_trade_builder.AppendValues(is_trades.data(), static_cast<int64_t>(is_trades.size())));
+		detail::check(is_ask_builder.AppendValues(is_asks.data(), static_cast<int64_t>(is_asks.size())));
+		detail::check(remove_level_builder.AppendValues(remove_levels.data(), static_cast<int64_t>(remove_levels.size())));
 
 		std::shared_ptr<arrow::Array> symbol_arr, time_arr, price_arr, size_arr;
 		std::shared_ptr<arrow::Array> is_bid_arr, is_trade_arr, is_ask_arr, remove_level_arr;
